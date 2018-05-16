@@ -1,0 +1,23 @@
+---
+group:
+  mode_automations:
+    name: Modes
+    control: hidden
+    entities:
+      - input_boolean.mode_do_not_disturb
+      - input_boolean.mode_guest_mode
+      - input_boolean.mode_vacation_mode
+
+input_boolean:
+  mode_do_not_disturb:
+    icon: mdi:bell-off
+    initial: false
+    name: Do Not Disturb
+  mode_guest_mode:
+    icon: mdi:hotel
+    initial: false
+    name: Guest Mode
+  mode_vacation_mode:
+    icon: mdi:beach
+    initial: false
+    name: Vacation Mode

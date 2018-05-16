@@ -1,0 +1,18 @@
+---
+device_tracker:
+  - platform: automatic
+    client_id: !secret automatic_client_id
+    secret: !secret automatic_secret
+    current_location: true
+
+group:
+  cars:
+    name: Cars
+    entities:
+      - device_tracker.2010_subaru_legacy
+  subaru_automations:
+    name: Subaru
+    entities:
+      - input_boolean.subaru_legacy_automation_drive_home_prompt
+      - input_boolean.subaru_legacy_automation_notify_eta
+      - input_boolean.subaru_legacy_automation_notify_low_fuel

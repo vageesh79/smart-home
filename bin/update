@@ -1,0 +1,70 @@
+#!/bin/bash
+set -euxo pipefail
+
+function ask_for_sudo() {
+  # Ask for the administrator password upfront:
+  sudo -v &> /dev/null
+
+  # Update existing `sudo` time stamp until this script has finished:
+  # https://gist.github.com/cowboy/3118588
+  while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+  done &> /dev/null &
+}
+
+# Input the sudo and key passwords once:
+ask_for_sudo
+eval `ssh-agent`
+ssh-add ~/.ssh/id_ed25519
+
+# Make sure the OS is up to date:
+sudo apt update && sudo apt upgrade -y
+
+# Pull the latest repo information:
+git pull origin $(git rev-parse --abbrev-ref HEAD)
+git submodule update --init --recursive
+git remote prune origin
+
+# Make sure the config directory structure exists:
+sudo mkdir -p /etc/docker
+sudo chown -R bachya:docker /etc/docker
+
+# Update AppDaemon configs:
+mkdir -p /etc/docker/appdaemon
+rm -rf /etc/docker/appdaemon/*
+cp -r ./conf/appdaemon/* /etc/docker/appdaemon/
+
+# Update Glances configs:
+mkdir -p /etc/docker/glances
+cp -r ./conf/glances/* /etc/docker/glances/
+
+# Update ha-dockermon configs:
+mkdir -p /etc/docker/ha-dockermon
+rm -rf /etc/docker/ha-dockermon/*
+cp -r ./conf/ha-dockermon/* /etc/docker/ha-dockermon/
+
+# Update Home Assistant configs:
+mkdir -p /etc/docker/home-assistant
+rm -rf /etc/docker/home-assistant/conf
+rm -rf /etc/docker/home-assistant/custom_components
+cp -r ./conf/home-assistant/* /etc/docker/home-assistant/
+
+# Update NGINX configs:
+mkdir -p /etc/docker/nginx
+rm -rf /etc/docker/nginx/*
+cp -r ./conf/nginx/* /etc/docker/nginx/
+
+# Create a director for shared configurations:
+mkdir -p /etc/docker/shared
+
+# Re-build the containers if necessary:
+docker-compose build
+
+# Restart the containers:
+docker-compose down --remove-orphans
+docker volume rm $(docker volume ls -qf dangling=true) || true
+docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
+docker rm $(docker ps -qa --no-trunc --filter "status=exited") || true
+docker-compose up -d

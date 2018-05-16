@@ -1,0 +1,13 @@
+---
+group:
+  outdoor_lights:
+    name: Lights
+    entities:
+      - switch.front_patio_light_switch
+      - switch.kitchen_patio_light_switch
+  outdoor_lights_automations:
+    name: Outdoor Lights
+    entities:
+      - input_boolean.outdoor_lights_automation_off_at_11pm
+      - input_boolean.outdoor_lights_automation_on_at_sunset
+      - input_boolean.outdoor_lights_automation_vacation_mode

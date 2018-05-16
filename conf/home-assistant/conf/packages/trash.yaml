@@ -1,0 +1,20 @@
+---
+group:
+  trash:
+    name: Trash
+    entities:
+      - sensor.extra_trash_pickup
+      - sensor.recycling_pickup
+      - sensor.trash_pickup
+  trash_automations:
+    name: Trash
+    entities:
+      - input_boolean.trash_automation_notify_of_pickup
+
+sensor:
+  - platform: denvertrash
+    recollect_place_id: !secret denver_trash_id
+    monitored_conditions:
+      - extra_trash
+      - recycling
+      - trash

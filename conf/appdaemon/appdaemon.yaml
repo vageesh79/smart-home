@@ -1,0 +1,11 @@
+---
+appdaemon:
+  api_key: !secret api_key
+  api_port: 5051
+  threads: 10
+  plugins:
+    HASS:
+      type: hass
+      ha_key: !secret ha_key
+      ha_url: http://gryffindor.phil.lan:8123
+

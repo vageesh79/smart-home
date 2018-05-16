@@ -1,0 +1,22 @@
+---
+view: true
+icon: mdi:home-automation
+entities:
+  - group.climate_automations
+  - group.dishwasher_automations
+  - group.fiddle_leaf_fig_automations
+  - group.hass_automations
+  - group.living_room_lights_automations
+  - group.living_room_fireplace_automations
+  - group.master_bathroom_fan_automations
+  - group.master_bedroom_lights_automations
+  - group.mode_automations
+  - group.office_lights_automations
+  - group.outdoor_lights_automations
+  - group.presence_automations
+  - group.security_automations
+  - group.subaru_automations
+  - group.systems_automations
+  - group.trash_automations
+  - group.valuables_automations
+  - group.wolfie_automations

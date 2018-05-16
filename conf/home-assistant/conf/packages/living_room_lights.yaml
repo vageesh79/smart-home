@@ -1,0 +1,21 @@
+---
+group:
+  living_room_lights:
+    name: Lights
+    entities:
+      # - switch.christmas_tree
+      - switch.reading_lamp
+      - switch.sofa_lamp
+  living_room_lights_automations:
+    name: Living Room Lights
+    entities:
+      - input_boolean.living_room_lights_automation_on_at_sunset
+      - input_boolean.living_room_lights_automation_turn_on_upon_arrival
+      - input_boolean.living_room_lights_automation_turn_on_when_cloudy
+      - input_boolean.living_room_lights_automation_vacation_mode
+
+wemo:
+  static:
+    # - christmas-tree-wemo.phil.lan
+    - reading-lamp-wemo.phil.lan
+    - sofa-lamp-wemo.phil.lan

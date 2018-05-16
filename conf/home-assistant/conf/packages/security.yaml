@@ -1,0 +1,177 @@
+---
+alarm_control_panel:
+  - platform: simplisafe
+    username: !secret simplisafe_username
+    password: !secret simplisafe_password
+
+camera:
+  - platform: nest
+  - platform: yi
+    name: Kitchen Camera
+    host: kitchen-camera.phil.lan
+    username: !secret yi_username
+    password: !secret yi_password
+    ffmpeg_arguments: -s 800x450
+  - platform: yi
+    name: Guest Bedroom Camera
+    host: guest-bedroom-camera.phil.lan
+    username: !secret yi_username
+    password: !secret yi_password
+    ffmpeg_arguments: -s 800x450
+
+group:
+  garage_fire_door:
+    name: Fire Door
+    entities:
+      - lock.garage_door_locked
+  security_automations:
+    name: Security
+    entities:
+      - input_boolean.security_automation_absent_insecure
+      - input_boolean.security_automation_auto_departure_lockup
+      - input_boolean.security_automation_auto_nighttime_lockup
+      - input_boolean.security_automation_garage_left_open
+      - input_boolean.security_automation_notify_on_change
+  security_overview:
+    name: Security Overview
+    control: hidden
+    entities:
+      - sensor.secure_status
+      - scene.depart_home
+      - scene.drive_home
+      - scene.walk_home
+      - scene.good_night
+  security_system:
+    name: Security System
+    entities:
+      - alarm_control_panel.simplisafe
+      - input_boolean.security_automation_notify_on_change
+
+scene:
+  - name: Depart Home
+    entities:
+      alarm_control_panel.simplisafe:
+        state: armed_away
+      cover.garage_door:
+        state: closed
+      lock.front_door_locked:
+        state: locked
+      lock.garage_door_locked:
+        state: locked
+      group.living_room_lights:
+        state: false
+      group.living_room_tv:
+        state: false
+      media_player.house_audio:
+        state: paused
+      media_player.living_room:
+        state: paused
+      switch.fireplace:
+        state: false
+  - name: Drive Home
+    entities:
+      alarm_control_panel.simplisafe:
+        state: disarmed
+      cover.garage_door:
+        state: open
+      lock.garage_door_locked:
+        state: unlocked
+  - name: Good Night
+    entities:
+      alarm_control_panel.simplisafe:
+        state: armed_home
+      cover.garage_door:
+        state: closed
+      lock.front_door_locked:
+        state: locked
+      lock.garage_door_locked:
+        state: locked
+      group.living_room_lights:
+        state: false
+      group.living_room_tv:
+        state: false
+      group.office_lights:
+        state: false
+      group.master_bathroom:
+        state: false
+      media_player.house_audio:
+        state: paused
+      media_player.living_room:
+        state: paused
+      switch.fireplace:
+        state: false
+  - name: Walk Home
+    entities:
+      alarm_control_panel.simplisafe:
+        state: disarmed
+      lock.front_door_locked:
+        state: unlocked
+
+sensor:
+  - platform: template
+    sensors:
+      front_door_lock_battery:
+        friendly_name: Front Door Lock
+        value_template: "{{ states.zwave.front_door.attributes.battery_level }}"
+        unit_of_measurement: "%"
+        icon_template: >
+          {%
+            set battery_level =
+              states.zwave.front_door.attributes.battery_level|int
+          %}
+          {% if battery_level >= 90 %}
+            mdi:battery
+          {% elif battery_level >= 70 and battery_level < 90 %}
+            mdi:battery-70
+          {% elif battery_level >= 50 and battery_level < 70 %}
+            mdi:battery-50
+          {% elif battery_level >= 30 and battery_level < 50 %}
+            mdi:battery-30
+          {% elif battery_level >= 10 and battery_level < 30 %}
+            mdi:battery-10
+          {% else %}
+            mdi:battery-outline
+          {% endif %}
+      garage_fire_door_lock_battery:
+        friendly_name: Garage Fire Door Lock
+        value_template: >
+          {{ states.zwave.garage_door.attributes.battery_level }}
+        unit_of_measurement: '%'
+        icon_template: >
+          {%
+            set battery_level =
+              states.zwave.garage_door.attributes.battery_level
+          %}
+          {% if battery_level >= 90 %}
+            mdi:battery
+          {% elif battery_level >= 70 and battery_level < 90 %}
+            mdi:battery-70
+          {% elif battery_level >= 50 and battery_level < 70 %}
+            mdi:battery-50
+          {% elif battery_level >= 30 and battery_level < 50 %}
+            mdi:battery-30
+          {% elif battery_level >= 10 and battery_level < 30 %}
+            mdi:battery-10
+          {% else %}
+            mdi:battery-outline
+          {% endif %}
+      secure_status:
+        friendly_name: Security Status
+        value_template: >
+          {% if is_state('lock.front_door_locked', 'locked')
+             and is_state('lock.garage_door_locked', 'locked')
+             and not is_state('alarm_control_panel.simplisafe', 'disarmed')
+             and is_state('cover.garage_door', 'closed') %}
+            Secure
+          {% else %}
+            Open
+          {% endif %}
+        icon_template: >
+          {% if is_state('lock.front_door_locked', 'locked')
+             and is_state('lock.garage_door_locked', 'locked')
+             and not is_state('alarm_control_panel.simplisafe', 'disarmed')
+             and is_state('cover.garage_door', 'closed') %}
+            mdi:lock
+          {% else %}
+            mdi:lock-open-outline
+          {% endif %}

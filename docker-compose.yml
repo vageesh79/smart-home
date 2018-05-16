@@ -1,0 +1,60 @@
+---
+version: "2"
+
+services:
+
+  appdaemon:
+    build:
+      context: ./appdaemon
+      args:
+        version: 3.0.1
+    command: /usr/src/app/start.sh
+    container_name: appdaemon
+    image: bachya/appdaemon-rpi
+    ports:
+      - "5051:5051/tcp"
+    restart: always
+    volumes:
+      - /etc/docker/appdaemon:/config:ro
+      - /etc/docker/shared:/shared
+      - /etc/localtime:/etc/localtime:ro
+
+  ha-dockermon:
+    build:
+      context: ./ha-dockermon
+      args:
+        version: 0.0.3
+    command: /usr/src/app/start.sh
+    container_name: ha-dockermon
+    environment:
+      - config_dir=/config
+    image: bachya/ha-dockermon-rpi
+    ports:
+      - "8126:8126/tcp"
+    restart: always
+    volumes:
+      - /etc/docker/ha-dockermon:/config:ro
+      - /etc/docker/shared:/shared
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  hass:
+    build:
+      context: ./home-assistant
+      args:
+        version: 0.69
+    command: /usr/src/app/start.sh
+    container_name: hass
+    devices:
+      - "/dev/zwave:/dev/zwave"
+    environment:
+      - DB_HOST=mydbhost.com
+      - DB_USER=dbuser
+    image: bachya/hass-rpi
+    network_mode: "host"
+    restart: always
+    volumes:
+      - /etc/docker/home-assistant:/config
+      - /etc/docker/shared:/shared:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock

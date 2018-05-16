@@ -1,0 +1,47 @@
+---
+entities:
+  - name: B-MS-1
+    url: http://b-ms-1.phil.lan
+    icon: mdi:router-wireless
+  - name: B-R-1
+    url: http://b-r-1.phil.lan
+    icon: mdi:router-wireless
+  - name: Climate Sensor (Office)
+    url: http://climate-sensor-1.phil.lan
+    icon: mdi:thermometer
+  - name: Durmstrang Glances
+    url: http://durmstrang.phil.lan:61208
+    icon: mdi:settings
+  - name: Gryffindor Glances
+    url: http://gryffindor.phil.lan:61208
+    icon: mdi:settings
+  - name: Hufflepuff Glances
+    url: http://hufflepuff.phil.lan:61208
+    icon: mdi:settings
+  - name: O-R-1
+    url: http://o-r-1.phil.lan
+    icon: mdi:router-wireless
+  - name: Pi-hole
+    url: http://hufflepuff.phil.lan:8080/admin
+    icon: mdi:shield
+  - name: Ravenclaw Glances
+    url: http://ravenclaw.phil.lan:61208
+    icon: mdi:settings
+  - name: Salt Lamp (Master Bedroom)
+    url: http://salt-lamp-1.phil.lan
+    icon: mdi:lava-lamp
+  - name: Salt Lamp (Office)
+    url: http://salt-lamp-2.phil.lan
+    icon: mdi:lava-lamp
+  - name: Slytherin Glances
+    url: http://slytherin.phil.lan:61208
+    icon: mdi:settings
+  - name: Wyze Camera (Garage)
+    url: http://garage-camera.phil.lan
+    icon: mdi:cctv
+  - name: Yi Camera (Guest Bedroom)
+    url: http://guest-bedroom-camera.phil.lan
+    icon: mdi:cctv
+  - name: Yi Camera (Kitchen)
+    url: http://kitchen-camera.phil.lan
+    icon: mdi:cctv

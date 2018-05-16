@@ -1,0 +1,16 @@
+---
+group:
+  sprinkler_system:
+    name: Sprinkler System
+    control: hidden
+    entities:
+      - switch.program_morning
+      - switch.program_morning_no_planter
+      - switch.program_evening
+      - switch.program_evening_no_planter
+      - switch.zone_landscaping
+      - switch.zone_flower_box
+
+rainmachine:
+  ip_address: rainmachine.phil.lan
+  password: !secret rainmachine_password

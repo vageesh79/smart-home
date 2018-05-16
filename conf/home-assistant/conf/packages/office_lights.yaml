@@ -1,0 +1,35 @@
+---
+group:
+  office_lights_automations:
+    name: Office Lights
+    entities:
+      - input_boolean.office_lights_automation_off_at_10pm
+      - input_boolean.office_lights_automation_on_at_sunset
+      - input_boolean.office_lights_automation_sleep_timer
+  office_salt_lamp:
+    name: Salt Lamp
+    entities:
+      - light.salt_lamp_office
+      - input_number.office_salt_lamp_timer
+
+input_number:
+  office_salt_lamp_timer:
+    name: Sleep Timer
+    initial: 0
+    min: 0
+    max: 90
+    step: 5
+    unit_of_measurement: minutes
+    icon: mdi:timer
+
+light:
+  - platform: mqtt
+    name: "Salt Lamp (Office)"
+    state_topic: "stat/salt-lamp-2/POWER"
+    command_topic: "cmnd/salt-lamp-2/POWER"
+    availability_topic: "tele/salt-lamp-2/LWT"
+    payload_on: "ON"
+    payload_off: "OFF"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    retain: true

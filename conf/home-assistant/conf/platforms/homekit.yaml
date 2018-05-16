@@ -1,0 +1,10 @@
+---
+filter:
+  include_domains:
+    - alarm_control_panel
+    - light
+  include_entities:
+    - climate.thermostat
+    - sensor.average_indoor_temperature
+    - sensor.average_indoor_humidity
+    - switch.pihole_enabled

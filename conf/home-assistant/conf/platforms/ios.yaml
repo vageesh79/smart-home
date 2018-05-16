@@ -1,0 +1,46 @@
+---
+push:
+  categories:
+    - name: Appliances
+      identifier: appliances
+      actions:
+        - identifier: APPLIANCE_EMPTIED
+          title: Empty
+          activationMode: background
+          authenticationRequired: false
+    - name: Garage
+      identifier: garage
+      actions:
+        - identifier: GARAGE_CLOSE
+          title: Close
+          activationMode: background
+          authenticationRequired: false
+          destructive: true
+        - identifier: GARAGE_WAIT
+          title: Wait 5 Minutes
+          activationMode: background
+          authenticationRequired: false
+    - name: Car Near Home
+      identifier: car_near_home
+      actions:
+        - identifier: OPEN_UP
+          title: Open Up
+          activationMode: background
+          authenticationRequired: false
+          destructive: false
+    - name: Security
+      identifier: security
+      actions:
+        - identifier: LOCK_UP_AWAY
+          title: Lock Up (Away)
+          activationMode: background
+          authenticationRequired: false
+          destructive: true
+        - identifier: LOCK_UP_HOME
+          title: Lock Up (Home)
+          activationMode: background
+          authenticationRequired: false
+        - identifier: IGNORE
+          title: Ignore
+          activationMode: background
+          authenticationRequired: false

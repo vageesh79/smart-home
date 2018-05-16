@@ -1,0 +1,155 @@
+---
+group:
+  air_quality:
+    name: Air Quality
+    entities:
+      - sensor.us_air_pollution_level
+      - sensor.us_air_quality_index
+      - sensor.us_main_pollutant
+  allergies_and_disease:
+    name: Allergies & Disease
+    entities:
+      - sensor.allergy_index_today
+      - sensor.allergy_index_tomorrow
+      - sensor.allergy_index_yesterday
+      - sensor.allergy_index_forecasted_average
+      - sensor.allergy_index_historical_average
+      - sensor.cold__flu_forecasted_average
+  climate:
+    name: Climate
+    entities:
+      - sensor.average_indoor_temperature
+      - sensor.average_indoor_humidity
+      - switch.climate_away_mode
+  climate_automations:
+    name: Climate
+    entities:
+      - input_boolean.climate_automation_adjust_on_proximity
+      - input_boolean.climate_automation_notify_bad_aqi
+  indoor_climate:
+    name: Indoor Climate
+    entities:
+      - climate.thermostat
+      - sensor.thermostat_thermostat_humidity
+      - sensor.thermostat_thermostat_hvac_state
+  master_bathroom_climate:
+    name: Climate
+    entities:
+      - sensor.climate_2_temperature
+      - sensor.climate_2_humidity
+      - sensor.climate_2_pressure
+  office_climate:
+    name: Climate
+    entities:
+      - sensor.climate_1_temperature
+      - sensor.climate_1_humidity
+      - sensor.climate_1_pressure
+  outdoor_climate:
+    name: Outdoor Climate
+    entities:
+      - sensor.dark_sky_temperature
+      - sensor.dark_sky_humidity
+      - sensor.dark_sky_cloud_coverage
+      - sensor.dark_sky_precip
+      - sensor.dark_sky_precip_probability
+      - sensor.dark_sky_pressure
+      - sensor.dark_sky_wind_speed
+
+sensor:
+  - platform: airvisual
+    api_key: !secret airvisual_api_key
+    monitored_conditions:
+      - us
+    show_on_map: false
+  - platform: darksky
+    api_key: !secret dark_sky_api_key
+    monitored_conditions:
+      - cloud_cover
+      - humidity
+      - precip_probability
+      - precip_type
+      - pressure
+      - temperature
+      - wind_speed
+  - platform: min_max
+    name: "Average Indoor Temperature"
+    type: "mean"
+    round_digits: 1
+    entity_ids:
+      # - sensor.climate_1_temperature
+      - sensor.climate_2_temperature
+      - sensor.fiddle_leaf_fig_temperature
+      - sensor.thermostat_thermostat_temperature
+  - platform: min_max
+    name: "Average Indoor Humidity"
+    type: "mean"
+    round_digits: 1
+    entity_ids:
+      # - sensor.climate_1_humidity
+      - sensor.climate_2_humidity
+      - sensor.thermostat_thermostat_humidity
+  - platform: mqtt
+    name: "Climate 1 Temperature"
+    icon: "mdi:thermometer"
+    state_topic: "tele/climatesensor1/SENSOR"
+    value_template: "{{ value_json['BME280'].Temperature }}"
+    unit_of_measurement: "°F"
+  - platform: mqtt
+    name: "Climate 1 Humidity"
+    icon: "mdi:water-percent"
+    state_topic: "tele/climatesensor1/SENSOR"
+    value_template: "{{ value_json['BME280'].Humidity }}"
+    unit_of_measurement: "%"
+  - platform: mqtt
+    name: "Climate 1 Pressure"
+    icon: "mdi:cloud"
+    state_topic: "tele/climatesensor1/SENSOR"
+    value_template: "{{ value_json['BME280'].Pressure }}"
+    unit_of_measurement: "hPa"
+  - platform: mqtt
+    name: "Climate 2 Temperature"
+    icon: "mdi:thermometer"
+    state_topic: "tele/climatesensor2/SENSOR"
+    value_template: "{{ value_json['BME280'].Temperature }}"
+    unit_of_measurement: "°F"
+  - platform: mqtt
+    name: "Climate 2 Humidity"
+    icon: "mdi:water-percent"
+    state_topic: "tele/climatesensor2/SENSOR"
+    value_template: "{{ value_json['BME280'].Humidity }}"
+    unit_of_measurement: "%"
+  - platform: mqtt
+    name: "Climate 2 Pressure"
+    icon: "mdi:cloud"
+    state_topic: "tele/climatesensor2/SENSOR"
+    value_template: "{{ value_json['BME280'].Pressure }}"
+    unit_of_measurement: "hPa"
+  - platform: pollen
+    zip_code: !secret pollen_zip_code
+    monitored_conditions:
+      - allergy_average_forecasted
+      - allergy_average_historical
+      - allergy_index_today
+      - allergy_index_tomorrow
+      - allergy_index_yesterday
+      - disease_average_forecasted
+  - platform: season
+
+sun:
+
+switch:
+  - platform: template
+    switches:
+      climate_away_mode:
+        friendly_name: Climate Away Mode
+        value_template: >
+          {{ states.climate.thermostat.attributes.away_mode == 'on'}}
+        icon_template: mdi:arrow-left-drop-circle
+        turn_on:
+          service: nest.set_mode
+          data:
+            home_mode: away
+        turn_off:
+          service: nest.set_mode
+          data:
+            home_mode: home

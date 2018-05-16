@@ -1,0 +1,177 @@
+---
+group:
+  battery_levels:
+    name: Battery Levels
+    entities:
+      - sensor.fiddle_leaf_fig_battery
+      - sensor.front_door_lock_battery
+      - sensor.garage_fire_door_lock_battery
+  hass_automations:
+    name: HASS
+    entities:
+      - input_boolean.hass_automation_auto_themes
+      - input_boolean.hass_automation_auto_vacation_mode
+      - input_boolean.hass_automation_bad_login_notification
+      - input_boolean.hass_automation_detect_blackout
+      - input_boolean.hass_automation_new_version_notification
+  links:
+    name: Links
+    entities:
+      - weblink.bms1
+      - weblink.br1
+      - weblink.climate_sensor_office
+      - weblink.durmstrang_glances
+      - weblink.gryffindor_glances
+      - weblink.hufflepuff_glances
+      - weblink.or1
+      - weblink.pihole
+      - weblink.ravenclaw_glances
+      - weblink.salt_lamp_master_bedroom
+      - weblink.salt_lamp_office
+      - weblink.slytherin_glances
+      - weblink.wyze_camera_garage
+      - weblink.yi_camera_guest_bedroom
+      - weblink.yi_camera_kitchen
+  network_speed:
+    name: Network Speed
+    entities:
+      - sensor.speedtest_download
+      - sensor.speedtest_upload
+      - sensor.speedtest_ping
+      - sensor.ssl_expiry
+  pihole:
+    name: Pi-hole
+    entities:
+      - switch.pihole_enabled
+      - sensor.pihole_ads_blocked_today
+      - sensor.pihole_ads_percentage_blocked_today
+      - sensor.pihole_dns_queries_today
+      - sensor.pihole_domains_blocked
+      - sensor.pihole_dns_unique_clients
+      - sensor.pihole_dns_unique_domains
+  systems_automations:
+    name: Systems
+    entities:
+      - input_boolean.systems_automation_low_batteries
+      - input_boolean.systems_automation_media_center_left_on
+      - input_boolean.systems_automation_nightly_tasks
+      - input_boolean.systems_automation_ssl_expiration
+  versions:
+    name: Versions
+    entities:
+      - sensor.appdaemon_available
+      - sensor.appdaemon_installed
+      - sensor.hadockermon_available
+      - sensor.hadockermon_installed
+      - sensor.hass_available
+      - sensor.hass_installed
+      - sensor.tasmota_available
+      - sensor.lowest_tasmota_installed
+
+sensor:
+  - platform: cert_expiry
+    name: SSL Expiry
+    host: !secret ssl_cert_host
+  - platform: command_line
+    name: HASS Available
+    command: >-
+      curl -L
+      -H "User-Agent: Home Assistant"
+      -H "Content-Type: application/json"
+      https://pypi.python.org/pypi/homeassistant/json
+    value_template: '{{ value_json.info.version }}'
+    scan_interval: 300
+  - platform: command_line
+    name: AppDaemon Available
+    command: >-
+      curl -L
+      -H "User-Agent: Home Assistant"
+      -H "Content-Type: application/json"
+      https://pypi.python.org/pypi/appdaemon/json
+    value_template: '{{ value_json.info.version }}'
+    scan_interval: 300
+  - platform: command_line
+    name: ha-dockermon Available
+    command: >-
+      curl -L
+      -H "User-Agent: Home Assistant"
+      -H "Content-Type: application/json"
+      https://api.github.com/repos/philhawthorne/ha-dockermon/tags
+    value_template: '{{ value_json[0].name[1:] }}'
+    scan_interval: 300
+  - platform: command_line
+    name: Tasmota Available
+    command: >-
+      curl -L
+      -H "User-Agent: Home Assistant"
+      -H "Content-Type: application/json"
+      https://api.github.com/repos/arendst/Sonoff-Tasmota/releases/latest
+    value_template: '{{ value_json.tag_name[1:] }}'
+    scan_interval: 300
+  - platform: file
+    name: AppDaemon Installed
+    file_path: /shared/.AD_VERSION
+  - platform: file
+    name: ha-dockermon Installed
+    file_path: /shared/.HADM_VERSION
+  - platform: pi_hole
+    host: hufflepuff.phil.lan:8080
+    monitored_conditions:
+      - ads_blocked_today
+      - ads_percentage_today
+      - dns_queries_today
+      - domains_being_blocked
+      - unique_clients
+      - unique_domains
+  - platform: speedtest
+    minute:
+      - 0
+      - 30
+    monitored_conditions:
+      - ping
+      - download
+      - upload
+  - platform: version
+    name: HASS Installed
+
+shell_command:
+  restart_appdaemon: >-
+    curl -u "hassuser:DUiwH;p%9yfL6ExeEuUT"
+    http://gryffindor.phil.lan:8126/container/appdaemon/restart
+  restart_elder_bach_hass: >-
+    curl -u "hassuser:ods0Zjsfg9jKuQocUlky"
+    http://ravenclaw.phil.lan:8126/container/hass/restart
+  restart_glances_gryffindor: >-
+    curl -u "hassuser:DUiwH;p%9yfL6ExeEuUT"
+    http://gryffindor.phil.lan:8126/container/glances/restart
+  restart_glances_hufflepuff: >-
+    curl -u "hassuser:qP9LAMZrdoxzDUB1HAXe"
+    http://hufflepuff.phil.lan:8126/container/glances/restart
+  restart_glances_ravenclaw: >-
+    curl -u "hassuser:ods0Zjsfg9jKuQocUlky"
+    http://ravenclaw.phil.lan:8126/container/glances/restart
+  restart_hass: >-
+    curl -u "hassuser:DUiwH;p%9yfL6ExeEuUT"
+    http://gryffindor.phil.lan:8126/container/hass/restart
+  restart_mosquitto: >-
+    curl -u "hassuser:qP9LAMZrdoxzDUB1HAXe"
+    http://hufflepuff.phil.lan:8126/container/mosquitto/restart
+  restart_nginx_gryffindor: >-
+    curl -u "hassuser:DUiwH;p%9yfL6ExeEuUT"
+    http://gryffindor.phil.lan:8126/container/nginx/restart
+  restart_nginx_hufflepuff: >-
+    curl -u "hassuser:qP9LAMZrdoxzDUB1HAXe"
+    http://hufflepuff.phil.lan:8126/container/nginx/restart
+  restart_plantgateway: >-
+    curl -u "hassuser:qP9LAMZrdoxzDUB1HAXe"
+    http://hufflepuff.phil.lan:8126/container/plantgateway/restart
+
+switch:
+  - platform: command_line
+    switches:
+      pihole_enabled:
+        friendly_name: Enabled
+        command_on: curl -X GET "http://hufflepuff.phil.lan:8080/admin/api.php?enable&auth=9efdc6ce332177a36688f69de8abe47f969bb024d0b842d145b114d4fd9d1499"
+        command_off: curl -X GET "http://hufflepuff.phil.lan:8080/admin/api.php?disable&auth=9efdc6ce332177a36688f69de8abe47f969bb024d0b842d145b114d4fd9d1499"
+        command_state: curl -X GET "http://hufflepuff.phil.lan:8080/admin/api.php?status&auth=9efdc6ce332177a36688f69de8abe47f969bb024d0b842d145b114d4fd9d1499"
+        value_template: "{{ value_json.status == 'enabled' }}"

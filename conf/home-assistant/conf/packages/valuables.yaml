@@ -1,0 +1,19 @@
+---
+device_tracker:
+  - platform: tile
+    username: !secret tile_username
+    password: !secret tile_password
+    monitored_variables:
+      - TILE
+
+group:
+  valuables:
+    name: Valuables
+    entities:
+      - device_tracker.tile_aarons_keys
+      - device_tracker.tile_aarons_wallet
+  valuables_automations:
+    name: Valuables
+    entities:
+      - input_boolean.aarons_keys_automation_left_somewhere
+      - input_boolean.aarons_wallet_automation_left_somewhere

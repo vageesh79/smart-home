@@ -1,0 +1,9 @@
+---
+view: true
+icon: mdi:sofa
+entities:
+  - group.fiddle_leaf_fig
+  - group.fireplace
+  - group.living_room_lights
+  - group.living_room_tv
+  - group.wolfie

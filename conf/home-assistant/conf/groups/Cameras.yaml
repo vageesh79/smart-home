@@ -1,0 +1,8 @@
+---
+view: true
+icon: mdi:cctv
+entities:
+  - camera.front_door
+  - camera.garage_camera
+  - camera.guest_bedroom_camera
+  - camera.kitchen_camera

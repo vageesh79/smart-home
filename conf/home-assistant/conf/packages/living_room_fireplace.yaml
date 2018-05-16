@@ -1,0 +1,10 @@
+---
+group:
+  fireplace:
+    name: Fireplace
+    entities:
+      - switch.fireplace
+  fireplace_automations:
+    name: Valuables
+    entities:
+      - input_boolean.fireplace_automation_presence_failsafe

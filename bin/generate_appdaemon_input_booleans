@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+"""Generate constraint switches for all AppDaemon features"""
+
+import argparse
+import yaml
+
+FEATURE_CONSTRAINTS = './conf/appdaemon/apps/automations.yaml'
+
+PARSER = argparse.ArgumentParser()
+PARSER.add_argument('--details', action='store_true')
+ARGS = PARSER.parse_args()
+
+
+OUTPUT = {}  # type: ignore
+with open(FEATURE_CONSTRAINTS, 'r') as file:
+    DATA = yaml.load(file)
+    for entity_name, automation_attrs in DATA.items():
+        for feature in automation_attrs.get('features', {}):
+            if not feature.get('constraint'):
+                continue
+
+            if feature['constraint'].get('key'):
+                key = '{0}_{1}'.format(entity_name,
+                                       feature['constraint']['key'])
+            else:
+                key = '{0}_{1}'.format(entity_name, feature['name'])
+
+            if key in OUTPUT:
+                raise ValueError('Duplicate detected: {0}'.format(key))
+
+            OUTPUT[key] = {
+                'name': feature['constraint']['name'],
+                'icon': feature['constraint']['icon'],
+                'initial': feature['constraint']['initial']
+            }
+
+if ARGS.details:
+    print(yaml.dump(OUTPUT, default_flow_style=False))
+else:
+    KEYS = sorted(['input_boolean.{0}'.format(k) for k in OUTPUT])
+    print('\n'.join(KEYS))

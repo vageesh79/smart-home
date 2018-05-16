@@ -1,0 +1,8 @@
+---
+view: true
+icon: mdi:home-assistant
+entities:
+  - group.climate
+  - group.people
+  - group.security_overview
+  - group.valuables

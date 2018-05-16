@@ -1,0 +1,14 @@
+---
+view: true
+icon: mdi:server-network
+entities:
+  - group.battery_levels
+  - group.durmstrang
+  - group.gryffindor
+  - group.hufflepuff
+  - group.links
+  - group.network_speed
+  - group.pihole
+  - group.ravenclaw
+  - group.slytherin
+  - group.versions

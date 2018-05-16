@@ -1,0 +1,705 @@
+---
+aarons_keys_automation:
+  module: valuables
+  class: TileAutomation
+  dependencies:
+    - do_not_disturb
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+  entities:
+    tile: device_tracker.tile_aarons_keys
+  features:
+    - name: left_somewhere
+      properties:
+        target: Aaron
+      constraint:
+        name: Notify AMB keys missing
+        icon: mdi:key
+        initial: true
+aarons_wallet_automation:
+  module: valuables
+  class: TileAutomation
+  dependencies:
+    - do_not_disturb
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+  entities:
+    tile: device_tracker.tile_aarons_wallet
+  features:
+    - name: left_somewhere
+      properties:
+        target: Aaron
+      constraint:
+        name: Notify AMB wallet missing
+        icon: mdi:wallet
+        initial: true
+climate_automation:
+  module: climate
+  class: ClimateAutomation
+  dependencies:
+    - climate_manager
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+    - vacation_mode
+  features:
+    - name: adjust_on_proximity
+      properties:
+        outside_threshold_high: 85
+        outside_threshold_low: 35
+      constraint:
+        name: Adjust on proximity
+        icon: mdi:car-side
+        initial: true
+    - name: notify_bad_aqi
+      entities:
+        aqi: sensor.us_air_quality_index
+        hvac_state: sensor.thermostat_thermostat_hvac_state
+      properties:
+        aqi_threshold: 100
+      mode_alterations:
+        do_not_disturb: disable
+        vacation_mode: disable
+      constraint:
+        name: Bad AQI notifications
+        icon: mdi:weather-windy
+        initial: true
+dishwasher_automation:
+  module: appliances
+  class: WasherDryerAutomation
+  dependencies:
+    - briefing_manager
+    - dishwasher
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+    - vacation_mode
+  manager_app: dishwasher
+  features:
+    - name: notify_done
+      properties:
+        clean_threshold: 0.0
+        drying_threshold: 3.0
+        running_threshold: 10.0
+      mode_alterations:
+        do_not_disturb: disable
+        vacation_mode: disable
+      constraint:
+        name: Notifications when clean
+        icon: mdi:washing-machine
+        initial: true
+fiddle_leaf_fig_automation:
+  module: plants
+  class: PlantAutomation
+  dependencies:
+    - briefing_manager
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+    - vacation_mode
+  friendly_name: Fred
+  features:
+    - name: low_moisture
+      entities:
+        current_moisture: sensor.fiddle_leaf_fig_moisture
+      properties:
+        moisture_threshold: 25
+      mode_alterations:
+        do_not_disturb: disable
+        vacation_mode: disable
+      constraint:
+        name: Notify of low moisture
+        icon: mdi:flower
+        initial: true
+fireplace_automation:
+  module: switches
+  class: SwitchAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - presence_manager
+    - utilities
+    - vacation_mode
+  entities:
+    switch: switch.fireplace
+  features:
+    - name: presence_failsafe
+      mode_alterations:
+        guest_mode: disable
+      constraint:
+        name: Disable fireplace when away
+        icon: mdi:fire
+        initial: true
+hass_automation:
+  module: hass
+  class: HomeAssistantAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+    - vacation_mode
+  features:
+    - name: auto_themes
+      properties:
+        dark_schedule_time: "20:00:00"
+        light_schedule_time: "08:00:00"
+      constraint:
+        name: Auto light/dark themes
+        icon: mdi:theme-light-dark
+        initial: true
+    - name: auto_vacation_mode
+      constraint:
+        name: Auto enable/disable vacation mode
+        icon: mdi:beach
+        initial: true
+    - name: bad_login_notification
+      entities:
+        notification: persistent_notification.httplogin
+      constraint:
+        name: Bad login notifications
+        icon: mdi:alert-circle
+        initial: true
+    - name: detect_blackout
+      entities:
+        blackout_switch: input_boolean.in_blackout
+      constraint:
+        name: Detect in-blackout
+        icon: mdi:theme-light-dark
+        initial: true
+    - name: new_version_notification
+      entities:
+        version_sensors:
+          appdaemon: !!python/tuple [
+            sensor.appdaemon_installed,
+            sensor.appdaemon_available
+          ]
+          ha_dockermon: !!python/tuple [
+            sensor.hadockermon_installed,
+            sensor.hadockermon_available
+          ]
+          hass: !!python/tuple [sensor.hass_installed, sensor.hass_available]
+          tasmota: !!python/tuple [
+            sensor.lowest_tasmota_installed,
+            sensor.tasmota_available
+          ]
+      properties:
+        apps:
+          appdaemon: AppDaemon
+          ha_dockermon: ha-dockermon
+          hass: Home Assistant
+          tasmota: Tasmota
+        tasmota_hosts:
+          # - climate-sensor-1.phil.lan
+          - climate-sensor-2.phil.lan
+          - salt-lamp-1.phil.lan
+          - salt-lamp-2.phil.lan
+      constraint:
+        name: Notify of new versions
+        icon: mdi:home-assistant
+        initial: true
+living_room_lights_automation:
+  module: switches
+  class: SwitchAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - presence_manager
+    - utilities
+    - vacation_mode
+  entities:
+    switch: group.living_room_lights
+  features:
+    - name: toggle_at_time
+      entities:
+        switch: switch.reading_lamp
+      properties:
+        presence_required: true
+        schedule_time: sunset
+        seasonal_offset: true
+        state: "on"
+      mode_alterations:
+        guest_mode: disable
+        vacation_mode: disable
+      constraint:
+        key: on_at_sunset
+        name: Turn on at sunset
+        icon: mdi:weather-sunset
+        initial: true
+    - name: turn_on_upon_arrival
+      mode_alterations:
+        guest_mode: disable
+      constraint:
+        name: Turn on upon arrival
+        icon: mdi:car
+        initial: true
+    - name: turn_on_when_cloudy
+      entities:
+        cloud_cover: sensor.dark_sky_cloud_coverage
+      properties:
+        above: 85.0
+        presence_required: true
+      mode_alterations:
+        guest_mode: disable
+        vacation_mode: disable
+      constraint:
+        name: Turn on when cloudy
+        icon: mdi:cloud
+        initial: true
+    - name: vacation_mode
+      mode_alterations:
+        guest_mode: disable
+        vacation_mode: enable
+      constraint:
+        name: Simulate vacation mode
+        icon: mdi:beach
+        initial: true
+master_bedroom_lights_automation:
+  module: switches
+  class: SwitchAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - presence_manager
+    - utilities
+    - vacation_mode
+  entities:
+    switch: light.salt_lamp_master_bedroom
+  features:
+    - name: sleep_timer
+      entities:
+        timer_slider: input_number.master_bedroom_salt_lamp_timer
+      constraint:
+        name: Enable sleep timer
+        icon: mdi:sleep
+        initial: true
+    - name: toggle_at_time
+      properties:
+        schedule_time: sunset
+        seasonal_offset: true
+        state: "on"
+      mode_alterations:
+        guest_mode: disable
+        vacation_mode: disable
+      constraint:
+        key: on_at_sunset
+        name: Turn on at sunset
+        icon: mdi:weather-sunset
+        initial: true
+master_bathroom_fan_automation:
+  module: switches
+  class: SwitchAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - presence_manager
+    - utilities
+    - vacation_mode
+  entities:
+    switch: switch.master_bathroom_fan_switch
+  features:
+    - name: sleep_timer
+      entities:
+        timer_slider: input_number.master_bathroom_fan_timer
+      constraint:
+        name: "Bathroom: enable sleep timer"
+        icon: mdi:sleep
+        initial: true
+    - name: toggle_at_threshold
+      entities:
+        entity_to_monitor: sensor.climate_2_humidity
+      properties:
+        above: 32
+        state: "on"
+      constraint:
+        key: toggle_high_humidity
+        name: "Bathroom: toggle on high humidity"
+        icon: mdi:water-percent
+        initial: true
+    - name: toggle_at_threshold
+      entities:
+        entity_to_monitor: sensor.climate_2_humidity
+      properties:
+        below: 27
+        state: "off"
+      constraint:
+        key: toggle_low_humidity
+        name: "Bathroom: toggle off low humidity"
+        icon: mdi:water-percent
+        initial: true
+master_bathroom_toilet_fan_automation:
+  module: switches
+  class: SwitchAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - presence_manager
+    - utilities
+    - vacation_mode
+  entities:
+    switch: switch.master_toilet_fan_switch
+  features:
+    - name: sleep_timer
+      entities:
+        timer_slider: input_number.master_bathroom_toilet_fan_timer
+      constraint:
+        name: "Toilet: enable sleep timer"
+        icon: mdi:sleep
+        initial: true
+    - name: toggle_at_time
+      properties:
+        schedule_time: "17:00:00"
+        state: "off"
+      mode_alterations:
+        guest_mode: disable
+        vacation_mode: disable
+      constraint:
+        key: off_at_5pm
+        name: "Toilet: off at 5pm"
+        icon: mdi:fan
+        initial: true
+    - name: toggle_at_time
+      properties:
+        schedule_time: "10:00:00"
+        state: "on"
+      mode_alterations:
+        guest_mode: disable
+        vacation_mode: disable
+      constraint:
+        key: on_at_10am
+        name: "Toilet: on at 10am"
+        icon: mdi:fan
+        initial: true
+office_lights_automation:
+  module: switches
+  class: SwitchAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - presence_manager
+    - utilities
+    - vacation_mode
+  entities:
+    switch: light.salt_lamp_office
+  features:
+    - name: sleep_timer
+      entities:
+        timer_slider: input_number.office_salt_lamp_timer
+      constraint:
+        name: Enable sleep timer
+        icon: mdi:sleep
+        initial: true
+    - name: toggle_at_time
+      properties:
+        schedule_time: "22:00:00"
+        state: "off"
+      mode_alterations:
+        guest_mode: disable
+        vacation_mode: disable
+      constraint:
+        key: off_at_10pm
+        name: Turn off at 10pm
+        icon: mdi:lightbulb
+        initial: true
+    - name: toggle_at_time
+      properties:
+        schedule_time: sunset
+        seasonal_offset: true
+        state: "on"
+      mode_alterations:
+        guest_mode: disable
+        vacation_mode: disable
+      constraint:
+        key: on_at_sunset
+        name: Turn on at sunset
+        icon: mdi:weather-sunset
+        initial: true
+outdoor_lights_automation:
+  module: switches
+  class: SwitchAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - presence_manager
+    - utilities
+    - vacation_mode
+  entities:
+    switch: group.outdoor_lights
+  features:
+    - name: toggle_at_time
+      properties:
+        schedule_time: "23:00:00"
+        state: "off"
+      mode_alterations:
+        vacation_mode: disable
+      constraint:
+        key: off_at_11pm
+        name: Turn off at 11pm
+        icon: mdi:lightbulb
+        initial: true
+    - name: toggle_at_time
+      properties:
+        schedule_time: sunset
+        seasonal_offset: true
+        state: "on"
+      mode_alterations:
+        vacation_mode: disable
+      constraint:
+        key: on_at_sunset
+        name: Turn on at sunset
+        icon: mdi:weather-sunset
+        initial: true
+    - name: vacation_mode
+      mode_alterations:
+        guest_mode: disable
+      constraint:
+        name: Simulate vacation mode
+        icon: mdi:beach
+        initial: true
+presence_automation:
+  module: presence
+  class: PresenceAutomation
+  dependencies:
+    - briefing_manager
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+    - vacation_mode
+  features:
+    - name: briefing_when_home
+      mode_alterations:
+        do_not_disturb: disable
+        vacation_mode: disable
+      constraint:
+        name: Briefing when coming home
+        icon: mdi:bell
+        initial: true
+security_automation:
+  module: security
+  class: SecurityAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - security_system
+    - utilities
+    - vacation_mode
+  features:
+    - name: absent_insecure
+      entities:
+        state: sensor.secure_status
+      mode_alterations:
+        do_not_disturb: disable
+        guest_mode: disable
+      constraint:
+        name: Absent & insecure alerts
+        icon: mdi:lock-open
+        initial: true
+    - name: auto_departure_lockup
+      mode_alterations:
+        guest_mode: disable
+      constraint:
+        name: Automatic departure lock up
+        icon: mdi:car-side
+        initial: true
+    - name: auto_nighttime_lockup
+      entities:
+        in_bed: binary_sensor.in_bed
+      mode_alterations:
+        guest_mode: disable
+      constraint:
+        name: Automatically lock up at night
+        icon: mdi:clock
+        initial: true
+    - name: garage_left_open
+      entities:
+        garage_door: cover.garage_door
+      properties:
+        time_left_open: 10
+      constraint:
+        name: Notify if garage left open
+        icon: mdi:garage
+        initial: true
+    - name: notify_on_change
+      entities:
+        state: sensor.secure_status
+      mode_alterations:
+        vacation_mode: enable
+      constraint:
+        name: Notify when state changes
+        icon: mdi:shield-half-full
+        initial: false
+subaru_legacy_automation:
+  module: car
+  class: CarAutomation
+  dependencies:
+    - do_not_disturb
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+  entities:
+    car: device_tracker.2010_subaru_legacy
+  features:
+    - name: drive_home_prompt
+      constraint:
+        name: Prompt to open up
+        icon: mdi:home-map-marker
+        initial: true
+    - name: notify_eta
+      constraint:
+        name: Notify of ETA
+        icon: mdi:car
+        initial: true
+    - name: notify_low_fuel
+      properties:
+        fuel_threshold: 10
+      constraint:
+        name: Notify of low fuel
+        icon: mdi:gas-station
+        initial: true
+systems_automation:
+  module: systems
+  class: SystemsAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - utilities
+    - vacation_mode
+  features:
+    - name: low_batteries
+      properties:
+        batteries_to_monitor:
+          - sensor.fiddle_leaf_fig_battery
+          - sensor.front_door_lock_battery
+          - sensor.garage_fire_door_lock_battery
+        battery_level_threshold: 10
+      constraint:
+        name: Notify of low batteries
+        icon: mdi:battery
+        initial: true
+    - name: left_in_state
+      entities:
+        entity: switch.media_center
+      properties:
+        seconds: 43200
+        state: "on"
+      constraint:
+        key: media_center_left_on
+        name: Media Center left on
+        icon: mdi:server
+        initial: true
+    - name: nightly_tasks
+      entities:
+        pihole_enabled: switch.pihole_enabled
+      properties:
+        restart_schedule_time: "00:15:00"
+        tasks_schedule_time: "00:00:00"
+      constraint:
+        name: Nightly tasks
+        icon: mdi:clock
+        initial: true
+    - name: ssl_expiration
+      entities:
+        ssl_expiry: sensor.ssl_expiry
+      properties:
+        expiry_threshold: 7
+      constraint:
+        name: Notify of SSL expiration
+        icon: mdi:certificate
+        initial: true
+trash_automation:
+  module: trash
+  class: TrashAutomation
+  dependencies:
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - trash_manager
+    - utilities
+    - vacation_mode
+  features:
+    - name: notify_of_pickup
+      constraint:
+        name: Notify of pickups
+        icon: mdi:delete
+        initial: true
+wolfie_automation:
+  module: appliances
+  class: VacuumAutomation
+  dependencies:
+    - briefing_manager
+    - do_not_disturb
+    - guest_mode
+    - handler_registry
+    - notification_manager
+    - presence_manager
+    - security_system
+    - utilities
+    - vacation_mode
+    - wolfie
+  manager_app: wolfie
+  features:
+    - name: monitor_consumables
+      properties:
+        consumable_threshold: 15
+        consumables:
+          - filter_left
+          - main_brush_left
+          - side_brush_left
+      mode_alterations:
+        do_not_disturb: disable
+        vacation_mode: disable
+      constraint:
+        name: Low supply notifications
+        icon: mdi:google-circles-group
+        initial: true
+    - name: scheduled_cycle
+      properties:
+        schedule_switches:
+          - input_boolean.vacuum_schedule_monday
+          - input_boolean.vacuum_schedule_tuesday
+          - input_boolean.vacuum_schedule_wednesday
+          - input_boolean.vacuum_schedule_thursday
+          - input_boolean.vacuum_schedule_friday
+          - input_boolean.vacuum_schedule_saturday
+          - input_boolean.vacuum_schedule_sunday
+        schedule_time: "10:00:00"
+      mode_alterations:
+        vacation_mode: disable
+      constraint:
+        name: Automatic schedule
+        icon: mdi:google-circles-group
+        initial: true

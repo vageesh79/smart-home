@@ -1,0 +1,65 @@
+---
+group:
+  fiddle_leaf_fig:
+    name: Fiddle Leaf Fig
+    entities:
+      - sensor.fiddle_leaf_fig_moisture
+      - sensor.fiddle_leaf_fig_temperature
+      - sensor.fiddle_leaf_fig_fertility
+      - sensor.fiddle_leaf_fig_brightness
+  fiddle_leaf_fig_automations:
+    name: Fiddle Fig
+    entities:
+      - input_boolean.fiddle_leaf_fig_automation_low_moisture
+
+sensor:
+  - platform: mqtt
+    state_topic: "plantgateway/plants/fiddle_leaf_fig/"
+    name: Fiddle Leaf Fig Battery Level
+    unit_of_measurement: "%"
+    value_template: '{{ value_json.battery }}'
+  - platform: mqtt
+    state_topic: "plantgateway/plants/fiddle_leaf_fig/"
+    name: Fiddle Leaf Fig Brightness
+    unit_of_measurement: lux
+    value_template: '{{ value_json.brightness }}'
+  - platform: mqtt
+    state_topic: "plantgateway/plants/fiddle_leaf_fig/"
+    name: Fiddle Leaf Fig Fertility
+    unit_of_measurement: "μs/cm"
+    value_template: '{{ value_json.conductivity }}'
+  - platform: mqtt
+    state_topic: "plantgateway/plants/fiddle_leaf_fig/"
+    name: Fiddle Leaf Fig Moisture
+    unit_of_measurement: "%"
+    value_template: '{{ value_json.moisture }}'
+  - platform: mqtt
+    state_topic: "plantgateway/plants/fiddle_leaf_fig/"
+    name: Fiddle Leaf Fig Temperature
+    unit_of_measurement: "°C"
+    value_template: '{{ value_json.temperature }}'
+  - platform: template
+    sensors:
+      fiddle_leaf_fig_battery:
+        friendly_name: Fiddle Leaf Fig
+        value_template: >
+          {{ states.sensor.fiddle_leaf_fig_battery_level.state }}
+        unit_of_measurement: "%"
+        icon_template: >
+          {%
+            set battery_level =
+              states.sensor.fiddle_leaf_fig_battery_level.state|int
+          %}
+          {% if battery_level >= 90 %}
+            mdi:battery
+          {% elif battery_level >= 70 and battery_level < 90 %}
+            mdi:battery-70
+          {% elif battery_level >= 50 and battery_level < 70 %}
+            mdi:battery-50
+          {% elif battery_level >= 30 and battery_level < 50 %}
+            mdi:battery-30
+          {% elif battery_level >= 10 and battery_level < 30 %}
+            mdi:battery-10
+          {% else %}
+            mdi:battery-outline
+          {% endif %}

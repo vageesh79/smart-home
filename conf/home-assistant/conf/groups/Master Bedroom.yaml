@@ -1,0 +1,7 @@
+---
+view: true
+icon: mdi:hotel
+entities:
+  - group.master_bedroom_salt_lamp
+  - group.master_bathroom_climate
+  - group.master_bathroom_fans

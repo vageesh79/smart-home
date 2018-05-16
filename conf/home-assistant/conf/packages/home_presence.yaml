@@ -1,0 +1,85 @@
+---
+group:
+  presence_automations:
+    name: Presence
+    entities:
+      - input_boolean.presence_automation_briefing_when_home
+  people:
+    name: People
+    entities:
+      - sensor.aaron_presence_status
+      - sensor.britt_presence_status
+
+input_select:
+  aaron_presence_status:
+    name: Aaron
+    options:
+      - 'Away'
+      - 'Extended Away'
+      - 'Home'
+      - 'Just Arrived'
+      - 'Just Left'
+  britt_presence_status:
+    name: Britt
+    options:
+      - 'Away'
+      - 'Extended Away'
+      - 'Home'
+      - 'Just Arrived'
+      - 'Just Left'
+
+sensor:
+  - platform: google_travel_time
+    name: Aaron Travel Time
+    api_key: !secret google_maps_api_key
+    origin: device_tracker.aaron_iphone
+    destination: zone.home
+  - platform: google_travel_time
+    name: Britt Travel Time
+    api_key: !secret google_maps_api_key
+    origin: device_tracker.britt_iphone
+    destination: zone.home
+  - platform: template
+    sensors:
+      aaron_presence_status:
+        friendly_name: 'Aaron'
+        value_template: >
+          {%
+            if states.device_tracker.aaron_iphone.state not in
+              ('home', 'not_home')
+          %}
+            {{ states.device_tracker.aaron_iphone.state }}
+          {% else %}
+            {{ states.input_select.aaron_presence_status.state }}
+          {% endif %}
+        entity_picture_template: >
+          {%
+            if states.input_select.aaron_presence_status.state == 'Home'
+            or
+            states.input_select.aaron_presence_status.state == 'Just Arrived'
+          %}
+            '/local/aaron-home.jpg'
+          {% else %}
+            '/local/aaron-away.jpg'
+          {% endif %}
+      britt_presence_status:
+        friendly_name: 'Britt'
+        value_template: >
+          {%
+            if states.device_tracker.britt_iphone.state not in
+              ('home', 'not_home')
+          %}
+            {{ states.device_tracker.britt_iphone.state }}
+          {% else %}
+            {{ states.input_select.britt_presence_status.state }}
+          {% endif %}
+        entity_picture_template: >
+          {%
+            if states.input_select.britt_presence_status.state == 'Home'
+            or
+            states.input_select.britt_presence_status.state == 'Just Arrived'
+          %}
+            '/local/britt-home.png'
+          {% else %}
+            '/local/britt-away.png'
+          {% endif %}

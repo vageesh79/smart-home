@@ -1,0 +1,85 @@
+---
+binary_sensor:
+  - platform: bayesian
+    name: In Bed
+    prior: 0.375
+    probability_threshold: 0.95
+    observations:
+      - entity_id: input_boolean.in_blackout
+        prob_given_true: 0.90
+        platform: state
+        to_state: "on"
+      - entity_id: light.salt_lamp_master_bedroom
+        prob_given_true: 0.888888889
+        platform: state
+        to_state: "off"
+      - entity_id: input_number.master_bedroom_salt_lamp_timer
+        prob_given_true: 0.888888889
+        platform: numeric_state
+        above: 0
+
+group:
+  master_bathroom_fans:
+    name: Bathroom Fans
+    entities:
+      - switch.master_bathroom_fan_switch
+      - input_number.master_bathroom_fan_timer
+      - switch.master_toilet_fan_switch
+      - input_number.master_bathroom_toilet_fan_timer
+  master_bathroom_fan_automations:
+    name: Master Bathroom Fans
+    entities:
+      - input_boolean.master_bathroom_fan_automation_sleep_timer
+      - input_boolean.master_bathroom_fan_automation_toggle_high_humidity
+      - input_boolean.master_bathroom_fan_automation_toggle_low_humidity
+      - input_boolean.master_bathroom_toilet_fan_automation_off_at_5pm
+      - input_boolean.master_bathroom_toilet_fan_automation_on_at_10am
+      - input_boolean.master_bathroom_toilet_fan_automation_sleep_timer
+  master_bedroom_lights_automations:
+    name: Master Bedroom Lights
+    entities:
+      - input_boolean.master_bedroom_lights_automation_on_at_sunset
+      - input_boolean.master_bedroom_lights_automation_sleep_timer
+  master_bedroom_salt_lamp:
+    name: Salt Lamp
+    entities:
+      - light.salt_lamp_master_bedroom
+      - input_number.master_bedroom_salt_lamp_timer
+
+input_number:
+  master_bathroom_fan_timer:
+    name: Sleep Timer
+    initial: 0
+    min: 0
+    max: 90
+    step: 5
+    unit_of_measurement: minutes
+    icon: mdi:timer
+  master_bathroom_toilet_fan_timer:
+    name: Sleep Timer
+    initial: 0
+    min: 0
+    max: 90
+    step: 5
+    unit_of_measurement: minutes
+    icon: mdi:timer
+  master_bedroom_salt_lamp_timer:
+    name: Sleep Timer
+    initial: 0
+    min: 0
+    max: 90
+    step: 5
+    unit_of_measurement: minutes
+    icon: mdi:timer
+
+light:
+  - platform: mqtt
+    name: "Salt Lamp (Master Bedroom)"
+    state_topic: "stat/salt-lamp-1/POWER"
+    command_topic: "cmnd/salt-lamp-1/POWER"
+    availability_topic: "tele/salt-lamp-1/LWT"
+    payload_on: "ON"
+    payload_off: "OFF"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    retain: true

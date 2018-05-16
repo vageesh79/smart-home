@@ -1,0 +1,9 @@
+---
+view: true
+icon: mdi:stove
+entities:
+  - camera.kitchen_camera
+  - group.garage_fire_door
+  - group.dishwasher
+  - group.indoor_climate
+  - group.security_system

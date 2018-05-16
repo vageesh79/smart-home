@@ -1,0 +1,6 @@
+---
+view: true
+icon: mdi:door
+entities:
+  - camera.front_door
+  - lock.front_door_locked

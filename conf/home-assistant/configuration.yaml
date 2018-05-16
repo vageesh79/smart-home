@@ -1,0 +1,37 @@
+---
+# Base Configuration:
+homeassistant: !include conf/homeassistant.yaml
+
+# Core Configuration
+config:
+frontend: !include conf/frontend.yaml
+history:
+http: !include conf/http.yaml
+logbook:
+logger: !include conf/logger.yaml
+map:
+recorder: !include conf/recorder.yaml
+updater:
+zeroconf:
+
+# Built-in Components:
+cloud: !include_dir_merge_named conf/cloud/
+device_tracker: !include_dir_list conf/device_trackers/
+emulated_hue: !include conf/platforms/emulated-hue.yaml
+group: !include_dir_named conf/groups/
+input_boolean: !include_dir_merge_named conf/input-booleans/
+notify: !include_dir_list conf/notifiers/
+weblink: !include conf/weblinks.yaml
+zone: !include_dir_merge_list conf/zones/
+
+# Custom Components:
+arlo: !include conf/platforms/arlo.yaml
+ffmpeg: !include conf/platforms/ffmpeg.yaml
+homekit: !include conf/platforms/homekit.yaml
+ifttt: !include conf/platforms/ifttt.yaml
+ios: !include conf/platforms/ios.yaml
+mqtt: !include conf/platforms/mosquitto.yaml
+nest: !include conf/platforms/nest.yaml
+proximity: !include conf/platforms/proximity.yaml
+tts: !include_dir_list conf/tts/
+zwave: !include conf/platforms/zwave.yaml

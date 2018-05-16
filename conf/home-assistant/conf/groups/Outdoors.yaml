@@ -1,0 +1,8 @@
+---
+view: true
+icon: mdi:white-balance-sunny
+entities:
+  - group.air_quality
+  - group.allergies_and_disease
+  - group.outdoor_climate
+  - group.outdoor_lights

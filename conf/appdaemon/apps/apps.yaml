@@ -1,0 +1,97 @@
+---
+alexa:
+  module: alexa
+  class: Alexa
+  dependencies:
+    - dishwasher
+    - handler_registry
+    - presence_manager
+    - security_system
+    - trash_manager
+    - tts
+    - utilities
+    - wolfie
+briefing_manager:
+  module: briefing_manager
+  class: BriefingManager
+  dependencies:
+    - handler_registry
+    - utilities
+climate_manager:
+  module: climate
+  class: ClimateManager
+  dependencies:
+    - handler_registry
+  entities:
+    average_humidity_sensor: sensor.average_indoor_humidity
+    average_temperature_sensor: sensor.average_indoor_temperature
+    outside_temp: sensor.dark_sky_temperature
+    thermostat: climate.thermostat
+dishwasher:
+  module: appliances
+  class: WasherDryer
+  dependencies:
+    - handler_registry
+  entities:
+    power: sensor.dishwasher_power
+    status: input_select.dishwasher_status
+handler_registry:
+  module: handler_registry
+  class: HandlerRegistry
+living_room_tv:
+  module: harmony
+  class: HarmonyRemote
+  entity: remote.samsung_tv
+  dependencies:
+    - handler_registry
+  activities:
+    play_ps4: 27901089
+    watch_roku: 39586383
+    watch_tv: 27901129
+notification_manager:
+  module: notification_manager
+  class: NotificationManager
+  dependencies:
+    - handler_registry
+    - presence_manager
+    - utilities
+presence_manager:
+  module: presence
+  class: PresenceManager
+  dependencies:
+    - handler_registry
+security_system:
+  module: security
+  class: SecuritySystem
+  dependencies:
+    - handler_registry
+trash_manager:
+  module: trash
+  class: TrashManager
+  dependencies:
+    - handler_registry
+    - utilities
+tts:
+  module: tts
+  class: TTS
+  dependencies:
+    - handler_registry
+    - living_room_tv
+    - presence_manager
+    - sonos_manager
+    - utilities
+utilities:
+  module: utilities
+  class: Utilities
+  dependencies:
+    - handler_registry
+wolfie:
+  module: appliances
+  class: Vacuum
+  dependencies:
+    - handler_registry
+    - security_system
+  entities:
+    bin_state: input_select.wolfie_bin_status
+    status: sensor.vacuum_status
+    vacuum: vacuum.xiaomi_vacuum_cleaner

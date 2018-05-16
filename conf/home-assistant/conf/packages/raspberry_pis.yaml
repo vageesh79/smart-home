@@ -1,0 +1,282 @@
+---
+group:
+  durmstrang:
+    name: Durmstrang
+    icon: mdi:raspberrypi
+    control: hidden
+    entities:
+      - sensor.durmstrang_uptime
+      - sensor.durmstrang_cpu_temperature
+      - sensor.durmstrang_disk_used
+      - sensor.durmstrang_ram_used
+      - sensor.durmstrang_swap_used
+      - switch.durmstrang_glances
+  gryffindor:
+    name: Gryffindor
+    icon: mdi:raspberrypi
+    control: hidden
+    entities:
+      - sensor.gryffindor_uptime
+      - sensor.uptime
+      - sensor.gryffindor_cpu_temperature
+      - sensor.gryffindor_disk_used
+      - sensor.gryffindor_ram_used
+      - sensor.gryffindor_swap_used
+      - switch.appdaemon
+      - switch.gryffindor_glances
+      - switch.gryffindor_nginx
+      - switch.hass
+  hufflepuff:
+    name: Hufflepuff
+    icon: mdi:raspberrypi
+    control: hidden
+    entities:
+      - sensor.hufflepuff_uptime
+      - sensor.hufflepuff_cpu_temperature
+      - sensor.hufflepuff_disk_used
+      - sensor.hufflepuff_ram_used
+      - sensor.hufflepuff_swap_used
+      - switch.hufflepuff_glances
+      - switch.hufflepuff_nginx
+      - switch.mqtt_mosquitto
+      - switch.pihole
+      - switch.plantgateway
+  ravenclaw:
+    name: Ravenclaw
+    icon: mdi:raspberrypi
+    control: hidden
+    entities:
+      - sensor.ravenclaw_uptime
+      - sensor.ravenclaw_cpu_temperature
+      - sensor.ravenclaw_disk_used
+      - sensor.ravenclaw_ram_used
+      - sensor.ravenclaw_swap_used
+      - switch.ravenclaw_hass_elder_bachs
+      - switch.ravenclaw_glances
+  slytherin:
+    name: Slytherin
+    icon: mdi:raspberrypi
+    control: hidden
+    entities:
+      - sensor.slytherin_uptime
+      - sensor.slytherin_cpu_temperature
+      - sensor.slytherin_disk_used
+      - sensor.slytherin_ram_used
+      - sensor.slytherin_swap_used
+      - switch.slytherin_glances
+
+sensor:
+  - platform: glances
+    name: Durmstrang
+    host: durmstrang.phil.lan
+    resources:
+      - 'disk_use_percent'
+      - 'memory_use_percent'
+      - 'swap_use_percent'
+  - platform: command_line
+    name: Durmstrang CPU Temperature
+    command: >
+      ssh bachya@durmstrang.phil.lan echo
+      $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat
+      /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))
+    unit_of_measurement: '°C'
+  - platform: command_line
+    name: Durmstrang Uptime
+    command: "ssh bachya@durmstrang.phil.lan cat /proc/uptime | cut -d ' ' -f 1"
+    value_template: '{{ (value | float / 86400) | round(0) }}'
+    unit_of_measurement: 'days'
+  - platform: glances
+    name: Gryffindor
+    host: gryffindor.phil.lan
+    resources:
+      - 'disk_use_percent'
+      - 'memory_use_percent'
+      - 'swap_use_percent'
+  - platform: command_line
+    name: Gryffindor CPU Temperature
+    command: >
+      echo $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat
+      /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))
+    unit_of_measurement: '°C'
+  - platform: command_line
+    name: Gryffindor Uptime
+    command: "cat /proc/uptime | cut -d ' ' -f 1"
+    value_template: '{{ (value | float / 86400) | round(0) }}'
+    unit_of_measurement: 'days'
+  - platform: glances
+    name: Hufflepuff
+    host: hufflepuff.phil.lan
+    resources:
+      - 'disk_use_percent'
+      - 'memory_use_percent'
+      - 'swap_use_percent'
+  - platform: command_line
+    name: Hufflepuff CPU Temperature
+    command: >
+      ssh bachya@hufflepuff.phil.lan echo
+      $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat
+      /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))
+    unit_of_measurement: '°C'
+  - platform: command_line
+    name: Hufflepuff Uptime
+    command: "ssh bachya@hufflepuff.phil.lan cat /proc/uptime | cut -d ' ' -f 1"
+    value_template: '{{ (value | float / 86400) | round(0) }}'
+    unit_of_measurement: 'days'
+  - platform: glances
+    name: Ravenclaw
+    host: ravenclaw.phil.lan
+    resources:
+      - 'disk_use_percent'
+      - 'memory_use_percent'
+      - 'swap_use_percent'
+  - platform: command_line
+    name: Ravenclaw CPU Temperature
+    command: >
+      ssh bachya@ravenclaw.phil.lan echo
+      $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat
+      /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))
+    unit_of_measurement: '°C'
+  - platform: command_line
+    name: Ravenclaw Uptime
+    command: "ssh bachya@ravenclaw.phil.lan cat /proc/uptime | cut -d ' ' -f 1"
+    value_template: '{{ (value | float / 86400) | round(0) }}'
+    unit_of_measurement: 'days'
+  - platform: glances
+    name: Slytherin
+    host: slytherin.phil.lan
+    resources:
+      - 'disk_use_percent'
+      - 'memory_use_percent'
+      - 'swap_use_percent'
+  - platform: command_line
+    name: Slytherin CPU Temperature
+    command: >
+      ssh bachya@slytherin.phil.lan echo
+      $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat
+      /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))
+    unit_of_measurement: '°C'
+  - platform: command_line
+    name: Slytherin Uptime
+    command: "ssh bachya@slytherin.phil.lan cat /proc/uptime | cut -d ' ' -f 1"
+    value_template: '{{ (value | float / 86400) | round(0) }}'
+    unit_of_measurement: 'days'
+  - platform: uptime
+
+switch:
+  - platform: rest
+    resource: http://gryffindor.phil.lan:8126/container/appdaemon
+    name: AppDaemon
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_gryffindor
+  - platform: rest
+    resource: http://durmstrang.phil.lan:8126/container/glances
+    name: Durmstrang Glances
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_durmstrang
+  - platform: rest
+    resource: http://gryffindor.phil.lan:8126/container/glances
+    name: Gryffindor Glances
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_gryffindor
+  - platform: rest
+    resource: http://gryffindor.phil.lan:8126/container/nginx
+    name: Gryffindor NGINX
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_gryffindor
+  - platform: rest
+    resource: http://gryffindor.phil.lan:8126/container/hass
+    name: HASS
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_gryffindor
+  - platform: rest
+    resource: http://hufflepuff.phil.lan:8126/container/glances
+    name: Hufflepuff Glances
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_hufflepuff
+  - platform: rest
+    resource: http://hufflepuff.phil.lan:8126/container/nginx
+    name: Hufflepuff NGINX
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_hufflepuff
+  - platform: rest
+    resource: http://hufflepuff.phil.lan:8126/container/mosquitto
+    name: MQTT (Mosquitto)
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_hufflepuff
+  - platform: rest
+    resource: http://hufflepuff.phil.lan:8126/container/pi-hole
+    name: Pi-hole
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_hufflepuff
+  - platform: rest
+    resource: http://hufflepuff.phil.lan:8126/container/plantgateway
+    name: plantgateway
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_hufflepuff
+  - platform: rest
+    resource: http://ravenclaw.phil.lan:8126/container/glances
+    name: Ravenclaw Glances
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_ravenclaw
+  - platform: rest
+    resource: http://ravenclaw.phil.lan:8126/container/hass
+    name: Ravenclaw HASS (Elder Bachs)
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_ravenclaw
+  - platform: rest
+    resource: http://slytherin.phil.lan:8126/container/glances
+    name: Slytherin Glances
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: >
+      {{ value_json is not none and value_json.state == "running" }}
+    username: !secret ha_dockermon_username
+    password: !secret ha_dockermon_password_slytherin

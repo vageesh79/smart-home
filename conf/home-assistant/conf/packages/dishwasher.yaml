@@ -1,0 +1,20 @@
+---
+group:
+  dishwasher:
+    name: Dishwasher
+    entities:
+      - input_select.dishwasher_status
+      - sensor.dishwasher_power
+  dishwasher_automations:
+    name: Dishwasher
+    entities:
+      - input_boolean.dishwasher_automation_notify_done
+
+input_select:
+  dishwasher_status:
+    name: Status
+    options:
+      - Dirty
+      - Running
+      - Drying
+      - Clean
