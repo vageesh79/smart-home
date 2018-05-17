@@ -24,7 +24,12 @@ class TileAutomation(Automation):
         @callback
         def arrived_home(self, event_name: str, data: dict,
                          kwargs: dict) -> None:
-            """Check for missing Tiles once we're home."""
+            """Start a timer after the person has arrived."""
+            self.hass.run_in(self.check_for_tile, 60 * 5)
+
+        @callback
+        def check_for_tile(self, kwargs: dict) -> None:
+            """Notify the person if their Tile is missing."""
             tile = self.hass.get_state(self.entities['tile'], attribute='all')
             if tile['state'] == 'home':
                 return
