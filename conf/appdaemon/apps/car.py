@@ -50,7 +50,7 @@ class CarAutomation(Automation):
             """Respond to iOS notification to open up."""
             self.hass.log('Responding to iOS request to open up')
 
-            self.hass.turn_on('scene.drive_home')
+            self.hass.call_service('scene/turn_on', entity_id='scene.drive_home')
 
     class NotifyEta(Feature):
         """Define a feature to notify of the vehicle's ETA to home."""
