@@ -1,10 +1,10 @@
 ---
 group:
-  fireplace:
+  living_room_fireplace:
     name: Fireplace
     entities:
       - switch.fireplace
-  fireplace_automations:
-    name: Valuables
+  living_room_fireplace_automations:
+    name: Fireplace
     entities:
       - input_boolean.fireplace_automation_presence_failsafe
