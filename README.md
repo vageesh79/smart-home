@@ -20,10 +20,10 @@ its own Dockerized environment).
 
 A taste!
 
-![Home Screenshot](https://github.com/bachya/smart-home/raw/master/img/home-screenshot-1.png)
-![Systems Screenshot](https://github.com/bachya/smart-home/raw/master/img/home-screenshot-2.png)
-![Living Room Screenshot](https://github.com/bachya/smart-home/raw/master/img/home-screenshot-3.png)
-![Automation Control Screenshot](https://github.com/bachya/smart-home/raw/master/img/home-screenshot-4.png)
+![Home Screenshot](https://github.com/bachya/smart-home/wiki/img/home-screenshot-1.png)
+![Systems Screenshot](https://github.com/bachya/smart-home/wiki/img/home-screenshot-2.png)
+![Living Room Screenshot](https://github.com/bachya/smart-home/wiki/img/home-screenshot-3.png)
+![Automation Control Screenshot](https://github.com/bachya/smart-home/wiki/img/home-screenshot-4.png)
 
 # Documentation
 
