@@ -26,6 +26,7 @@ class Base(hass.Hass):
 
         # Register custom constraints:
         self.register_constraint('constrain_anyone_home')
+        self.register_constraint('constrain_noone_home')
         self.register_constraint('constrain_out_of_blackout')
         self.register_constraint('constrain_sun')
 
