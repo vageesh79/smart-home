@@ -206,7 +206,7 @@ hass_automation:
           hass: Home Assistant
           tasmota: Tasmota
         tasmota_hosts:
-          - climatesensor2-5325.phil.lan
+          - climatesensor2-5325.phil.iot
           - salt-lamp-1-5292.phil.lan
           - salt-lamp-2.3544.phil.lan
       constraint:

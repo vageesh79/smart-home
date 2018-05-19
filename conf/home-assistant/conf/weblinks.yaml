@@ -7,7 +7,7 @@ entities:
     url: http://b-r-1.phil.lan
     icon: mdi:router-wireless
   - name: Climate Sensor (Office)
-    url: http://climatesensor2-5325.phil.lan
+    url: http://climatesensor2-5325.phil.iot
     icon: mdi:thermometer
   - name: Durmstrang Glances
     url: http://durmstrang.phil.lan:61208
