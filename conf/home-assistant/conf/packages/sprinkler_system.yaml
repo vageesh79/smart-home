@@ -12,5 +12,5 @@ group:
       - switch.zone_flower_box
 
 rainmachine:
-  ip_address: android-dcd08378ae3b1df1.phil.lan
+  ip_address: android-dcd08378ae3b1df1.phil.iot
   password: !secret rainmachine_password
