@@ -138,5 +138,5 @@ switch:
 
 vacuum:
   - platform: xiaomi_miio
-    host: wolfie-vacuum.phil.lan
+    host: rockrobo.phil.lan
     token: !secret xiaomi_vacuum_token

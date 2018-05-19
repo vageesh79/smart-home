@@ -8,7 +8,7 @@ binary_sensor:
 camera:
   - platform: ffmpeg
     name: Garage Camera
-    input: -rtsp_transport tcp -i rtsp://garage-camera.phil.lan:8554/unicast
+    input: -rtsp_transport tcp -i rtsp://192.168.1.109:8554/unicast
 
 group:
   garage_camera:

@@ -11,12 +11,12 @@ group:
 
 media_player:
   - platform: roku
-    host: roku.phil.lan
+    host: 192.168.1.129
 
 remote:
   - platform: harmony
     name: Samsung TV
-    host: harmony-hub.phil.lan
+    host: HarmonyHub.phil.lan
     activity: 22580039
 
 script:

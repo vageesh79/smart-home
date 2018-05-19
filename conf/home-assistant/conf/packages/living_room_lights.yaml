@@ -3,7 +3,6 @@ group:
   living_room_lights:
     name: Lights
     entities:
-      # - switch.christmas_tree
       - switch.reading_lamp
       - switch.sofa_lamp
   living_room_lights_automations:
@@ -16,6 +15,5 @@ group:
 
 wemo:
   static:
-    # - christmas-tree-wemo.phil.lan
-    - reading-lamp-wemo.phil.lan
-    - sofa-lamp-wemo.phil.lan
+    - 192.168.1.147
+    - 192.168.1.13
