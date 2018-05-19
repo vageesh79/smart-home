@@ -1,6 +1,6 @@
 ---
 entities:
-  - name: Climate Sensor (Office)
+  - name: Climate Sensor (Master Bathroom)
     url: http://climatesensor2-5325.phil.iot
     icon: mdi:thermometer
   - name: Dell PowerConnect 2824
@@ -34,7 +34,7 @@ entities:
     url: http://192.168.1.8
     icon: mdi:router-wireless
   - name: Wyze Camera (Garage)
-    url: http://garage-camera.phil.lan
+    url: http://garage-camera.phil.iot
     icon: mdi:cctv
   - name: Yi Camera (Guest Bedroom)
     url: http://guest-bedroom-camera.phil.lan
