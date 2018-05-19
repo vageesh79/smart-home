@@ -25,7 +25,6 @@ weblink: !include conf/weblinks.yaml
 zone: !include_dir_merge_list conf/zones/
 
 # Custom Components:
-arlo: !include conf/platforms/arlo.yaml
 ffmpeg: !include conf/platforms/ffmpeg.yaml
 homekit: !include conf/platforms/homekit.yaml
 ifttt: !include conf/platforms/ifttt.yaml
