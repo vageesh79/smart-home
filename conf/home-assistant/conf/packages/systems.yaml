@@ -17,18 +17,17 @@ group:
   links:
     name: Links
     entities:
-      - weblink.bms1
-      - weblink.br1
       - weblink.climate_sensor_office
+      - weblink.dell_powerconnect_2824
       - weblink.durmstrang_glances
       - weblink.gryffindor_glances
       - weblink.hufflepuff_glances
-      - weblink.or1
       - weblink.pihole
       - weblink.ravenclaw_glances
       - weblink.salt_lamp_master_bedroom
       - weblink.salt_lamp_office
       - weblink.slytherin_glances
+      - weblink.unifi_cloud_key
       - weblink.wyze_camera_garage
       - weblink.yi_camera_guest_bedroom
       - weblink.yi_camera_kitchen

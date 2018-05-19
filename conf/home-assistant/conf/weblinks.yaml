@@ -1,14 +1,11 @@
 ---
 entities:
-  - name: B-MS-1
-    url: http://b-ms-1.phil.lan
-    icon: mdi:router-wireless
-  - name: B-R-1
-    url: http://b-r-1.phil.lan
-    icon: mdi:router-wireless
   - name: Climate Sensor (Office)
     url: http://climatesensor2-5325.phil.iot
     icon: mdi:thermometer
+  - name: Dell PowerConnect 2824
+    url: http://b-ms-1.phil.lan
+    icon: mdi:router-wireless
   - name: Durmstrang Glances
     url: http://durmstrang.phil.lan:61208
     icon: mdi:settings
@@ -18,9 +15,6 @@ entities:
   - name: Hufflepuff Glances
     url: http://hufflepuff.phil.lan:61208
     icon: mdi:settings
-  - name: O-R-1
-    url: http://o-r-1.phil.lan
-    icon: mdi:router-wireless
   - name: Pi-hole
     url: http://hufflepuff.phil.lan:8080/admin
     icon: mdi:shield
@@ -36,6 +30,9 @@ entities:
   - name: Slytherin Glances
     url: http://slytherin.phil.lan:61208
     icon: mdi:settings
+  - name: UniFi Cloud Key
+    url: http://192.168.1.8
+    icon: mdi:router-wireless
   - name: Wyze Camera (Garage)
     url: http://garage-camera.phil.lan
     icon: mdi:cctv
