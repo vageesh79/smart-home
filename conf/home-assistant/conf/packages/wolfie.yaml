@@ -138,5 +138,5 @@ switch:
 
 vacuum:
   - platform: xiaomi_miio
-    host: rockrobo.phil.lan
+    host: rockrobo.phil.iot
     token: !secret xiaomi_vacuum_token
