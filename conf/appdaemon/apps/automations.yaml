@@ -207,8 +207,8 @@ hass_automation:
           tasmota: Tasmota
         tasmota_hosts:
           - climatesensor2-5325.phil.iot
-          - salt-lamp-1-5292.phil.lan
-          - salt-lamp-2.3544.phil.lan
+          - salt-lamp-1-5292.phil.iot
+          - salt-lamp-2.3544.phil.iot
       constraint:
         name: Notify of new versions
         icon: mdi:home-assistant

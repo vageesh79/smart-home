@@ -22,10 +22,10 @@ entities:
     url: http://ravenclaw.phil.lan:61208
     icon: mdi:settings
   - name: Salt Lamp (Master Bedroom)
-    url: http://salt-lamp-1-5292.phil.lan
+    url: http://salt-lamp-1-5292.phil.iot
     icon: mdi:lava-lamp
   - name: Salt Lamp (Office)
-    url: http://salt-lamp-2-3544.phil.lan
+    url: http://salt-lamp-2-3544.phil.iot
     icon: mdi:lava-lamp
   - name: Slytherin Glances
     url: http://slytherin.phil.lan:61208
