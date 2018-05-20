@@ -1,5 +1,5 @@
 ---
 view: true
-icon: mdi:hotel
+icon: mdi:briefcase
 entities:
   - camera.guest_bedroom_camera
