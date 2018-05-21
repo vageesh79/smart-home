@@ -567,11 +567,6 @@ subaru_legacy_automation:
   entities:
     car: device_tracker.2010_subaru_legacy
   features:
-    - name: drive_home_prompt
-      constraint:
-        name: Prompt to open up
-        icon: mdi:home-map-marker
-        initial: true
     - name: notify_eta
       constraint:
         name: Notify of ETA

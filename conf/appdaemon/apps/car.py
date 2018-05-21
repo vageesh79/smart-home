@@ -14,44 +14,6 @@ from lib.decorators import callback, endpoint
 class CarAutomation(Automation):
     """Define an automation for Automatic cars."""
 
-    class DriveHomePrompt(Feature):
-        """Define a feature to prompt for "Drive Home" when near."""
-
-        def initialize(self):
-            """Initialize."""
-            self.hass.listen_event(
-                self.response_from_push_notification,
-                'ios.notification_action_fired',
-                actionName='OPEN_UP',
-                constrain_input_boolean=self.constraint)
-            self.hass.listen_state(
-                self.nearing_home,
-                self.entities['car'],
-                old='not_home',
-                new='home',
-                constrain_input_boolean=self.constraint)
-
-        @callback
-        def nearing_home(self, entity: Union[str, dict], attribute: str,
-                         old: str, new: str, kwargs: dict) -> None:
-            """Fire a notification when the car nears home."""
-            [target] = [k for k, v in PEOPLE.items() if v.get('car') == entity]
-            self.hass.notification_manager.send(
-                'Open Up?',
-                'Do you want to open up?',
-                target=target,
-                data={'push': {
-                    'category': 'car_near_home'
-                }})
-
-        @callback
-        def response_from_push_notification(self, event_name: str, data: dict,
-                                            kwargs: dict) -> None:
-            """Respond to iOS notification to open up."""
-            self.hass.log('Responding to iOS request to open up')
-
-            self.hass.call_service('scene/turn_on', entity_id='scene.drive_home')
-
     class NotifyEta(Feature):
         """Define a feature to notify of the vehicle's ETA to home."""
 
