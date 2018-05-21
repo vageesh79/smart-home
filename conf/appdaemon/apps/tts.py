@@ -159,7 +159,7 @@ class TTSAutomation(Automation):
             new=self.presence_manager.HomeStates.home.value,
             first=True,
             constrain_input_boolean=constraint_name,
-            constrain_out_of_blackout=True)
+            constrain_blackout='out')
 
     # --- CALLBACKS -----------------------------------------------------------
     def _briefing_when_home_cb(self, event_name: str, data: dict,

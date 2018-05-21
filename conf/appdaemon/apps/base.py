@@ -29,7 +29,7 @@ class Base(hass.Hass):
         self.register_constraint('constrain_anyone')
         self.register_constraint('constrain_everyone')
         self.register_constraint('constrain_noone')
-        self.register_constraint('constrain_out_of_blackout')
+        self.register_constraint('constrain_blackout')
         self.register_constraint('constrain_sun')
 
     def _constrain_presence(self, method: str,
@@ -45,6 +45,16 @@ class Base(hass.Hass):
         """Constrain execution to whether anyone is in a state."""
         return self._constrain_presence('anyone', value)
 
+    def constraint_blackout(self, state: str) -> bool:
+        """Constrain execution based on blackout state"""
+        if state not in ['in', 'out']:
+            raise ValueError('Unknown blackout state: {0}'.format(state))
+
+        in_blackout = self.now_is_between(BLACKOUT_START, BLACKOUT_END)
+        if state == 'in':
+            return in_blackout
+        return not in_blackout
+
     def constrain_everyone(self, value: Union[str, None]) -> bool:
         """Constrain execution to whether everyone is in a state."""
         return self._constrain_presence('everyone', value)
@@ -52,11 +62,6 @@ class Base(hass.Hass):
     def constrain_noone(self, value: Union[str, None]) -> bool:
         """Constrain execution to whether no one is in a state."""
         return self._constrain_presence('noone', value)
-
-    def constrain_out_of_blackout(self, required: bool) -> bool:
-        """Constrain execution to whether anyone is home."""
-        return (not required
-                or not self.now_is_between(BLACKOUT_START, BLACKOUT_END))
 
     def constrain_sun(self, position: str) -> bool:
         """Constrain execution to the location of the sun."""
