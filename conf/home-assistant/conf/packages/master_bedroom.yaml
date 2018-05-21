@@ -30,8 +30,6 @@ group:
     name: Master Bathroom Fans
     entities:
       - input_boolean.master_bathroom_fan_automation_sleep_timer
-      - input_boolean.master_bathroom_fan_automation_toggle_high_humidity
-      - input_boolean.master_bathroom_fan_automation_toggle_low_humidity
       - input_boolean.master_bathroom_toilet_fan_automation_off_at_5pm
       - input_boolean.master_bathroom_toilet_fan_automation_on_at_10am
       - input_boolean.master_bathroom_toilet_fan_automation_sleep_timer

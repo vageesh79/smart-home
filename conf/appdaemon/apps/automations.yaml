@@ -323,28 +323,6 @@ master_bathroom_fan_automation:
         name: "Bathroom: enable sleep timer"
         icon: mdi:sleep
         initial: true
-    - name: toggle_at_threshold
-      entities:
-        entity_to_monitor: sensor.climate_2_humidity
-      properties:
-        above: 32
-        state: "on"
-      constraint:
-        key: toggle_high_humidity
-        name: "Bathroom: toggle on high humidity"
-        icon: mdi:water-percent
-        initial: true
-    - name: toggle_at_threshold
-      entities:
-        entity_to_monitor: sensor.climate_2_humidity
-      properties:
-        below: 27
-        state: "off"
-      constraint:
-        key: toggle_low_humidity
-        name: "Bathroom: toggle off low humidity"
-        icon: mdi:water-percent
-        initial: true
 master_bathroom_toilet_fan_automation:
   module: switches
   class: SwitchAutomation

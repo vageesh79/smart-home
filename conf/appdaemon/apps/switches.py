@@ -139,35 +139,6 @@ class SwitchAutomation(Automation):
                     state=self.properties['state'],
                     constrain_input_boolean=self.constraint)
 
-    class ToggleAtThreshold(BaseFeature):
-        """Define a feature to toggle a switch based on an entity threshold."""
-
-        def initialize(self) -> None:
-            """Initialize."""
-            if (not self.properties.get('above')
-                    and not self.properties.get('below')):
-                self.hass.error('Must provide an above/below threshold')
-                return
-
-            self.hass.listen_state(
-                self.threshold_changed,
-                self.entities['entity_to_monitor'],
-                constrain_start_time=BLACKOUT_END,
-                constrain_end_time=BLACKOUT_START,
-                constrain_input_boolean=self.constraint)
-
-        @callback
-        def threshold_changed(self, entity: Union[str, dict], attribute: str,
-                              old: str, new: str, kwargs: dict) -> None:
-            """Toggle the switch when a the threshold is reached."""
-            current = float(new)
-            if (self.properties.get('above')
-                    and current >= self.properties['above']):
-                self.toggle(self.properties['state'])
-            elif (self.properties.get('below')
-                  and current < self.properties['below']):
-                self.toggle(self.properties['state'])
-
     class TurnOnUponArrival(BaseFeature):
         """Define a feature to turn a switch on when one of us arrives."""
 
