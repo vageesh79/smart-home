@@ -37,26 +37,23 @@ class SecurityAutomation(Automation):
                 self.entities['state'],
                 new='Open',
                 duration=60 * 5,
-                constrain_input_boolean=self.constraint)
+                constrain_input_boolean=self.constraint,
+                constrain_noone='just_arrived,home')
 
         @callback
         def house_insecure(self, entity: Union[str, dict], attribute: str,
                            old: str, new: str, kwargs: dict) -> None:
             """Send notifications when the house has been left insecure."""
-            if (self.hass.presence_manager.noone(
-                    self.hass.presence_manager.HomeStates.just_arrived)
-                    and self.hass.presence_manager.noone(
-                        self.hass.presence_manager.HomeStates.home)):
-                self.hass.log('No one home and house is insecure; notifying')
+            self.hass.log('No one home and house is insecure; notifying')
 
-                self.hass.notification_manager.send(
-                    'Security Issue',
-                    "No one is home and the house isn't locked up.",
-                    blackout_start_time=None,
-                    blackout_end_time=None,
-                    data={'push': {
-                        'category': 'security'
-                    }})
+            self.hass.notification_manager.send(
+                'Security Issue',
+                "No one is home and the house isn't locked up.",
+                blackout_start_time=None,
+                blackout_end_time=None,
+                data={'push': {
+                    'category': 'security'
+                }})
 
         @callback
         def response_from_push_notification(self, event_name: str, data: dict,

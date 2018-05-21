@@ -317,9 +317,8 @@ class VacuumAutomation(Automation):
             self.hass.log('Vacuuming cycle all done')
 
             if (self.hass.presence_manager.noone(
-                    self.hass.presence_manager.HomeStates.just_arrived)
-                    and self.hass.presence_manager.noone(
-                        self.hass.presence_manager.HomeStates.home)):
+                    self.hass.presence_manager.HomeStates.just_arrived,
+                    self.hass.presence_manager.HomeStates.home)):
                 self.hass.log('Changing alarm state to "away"')
 
                 self.hass.security_system.state = (
@@ -386,9 +385,8 @@ class VacuumAutomation(Automation):
                 target='not {0}'.format(target))
 
         @callback
-        def schedule_changed(self, entity: Union[str, dict],
-                             attribute: str, old: str, new: str,
-                             kwargs: dict) -> None:
+        def schedule_changed(self, entity: Union[str, dict], attribute: str,
+                             old: str, new: str, kwargs: dict) -> None:
             """Reload the schedule when one of the input booleans change."""
             self.create_schedule()
 
