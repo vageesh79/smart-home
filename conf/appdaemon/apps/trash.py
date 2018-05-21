@@ -24,7 +24,7 @@ class TrashAutomation(Automation):
                 self.time_to_notify, ['Sunday'],
                 datetime.time(20, 0, 0),
                 constrain_input_boolean=self.constraint,
-                constraint_anyone_home=True)
+                constraint_anyone='home')
 
         def time_to_notify(self, kwargs: dict) -> None:
             """Schedule the next pickup notification."""

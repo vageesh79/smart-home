@@ -50,7 +50,7 @@ class SwitchAutomation(Automation):
                 self.switch_activated,
                 self.entities['switch'],
                 new='on',
-                constrain_noone_home=True,
+                constrain_noone='just_arrived,home',
                 constrain_input_boolean=self.constraint)
 
         @callback
@@ -130,8 +130,8 @@ class SwitchAutomation(Automation):
                     state=self.properties['state'],
                     offset=self.properties.get('seasonal_offset', False),
                     constrain_input_boolean=self.constraint,
-                    constrain_anyone_home=self.properties.get(
-                        'presence_required', False))
+                    constrain_anyone='just_arrived,home'
+                    if self.properties.get('presence_required') else None)
             else:
                 self.hass.run_daily(
                     self.toggle_on_schedule,
@@ -179,8 +179,8 @@ class SwitchAutomation(Automation):
                 constrain_start_time=BLACKOUT_END,
                 constrain_end_time=BLACKOUT_START,
                 constrain_input_boolean=self.constraint,
-                constrain_anyone_home=self.properties.get(
-                    'presence_required', False))
+                constrain_anyone='just_arrived,home'
+                if self.properties.get('presence_required') else None)
 
         @callback
         def cloud_coverage_reached(self, entity: Union[str, dict],

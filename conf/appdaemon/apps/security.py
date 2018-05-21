@@ -113,12 +113,12 @@ class SecurityAutomation(Automation):
                 self.entities['in_bed'],
                 new='on',
                 constrain_input_boolean=self.constraint,
-                constrain_anyone_home=True)
+                constrain_anyone='home')
             self.hass.run_daily(
                 self.midnight,
                 time(0, 0, 0),
                 constrain_input_boolean=self.constraint,
-                constrain_anyone_home=True)
+                constrain_anyone='home')
 
         def activate(self) -> None:
             """Activate the "Good Night" scene for home lockup."""

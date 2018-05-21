@@ -2,6 +2,8 @@
 
 # pylint: disable=unused-argument,attribute-defined-outside-init
 
+from typing import Union
+
 import appdaemon.plugins.hass.hassapi as hass
 
 from lib.const import BLACKOUT_START, BLACKOUT_END
@@ -10,7 +12,6 @@ from lib.const import BLACKOUT_START, BLACKOUT_END
 class Base(hass.Hass):
     """Define a base automation object."""
 
-    # --- INITIALIZERS --------------------------------------------------------
     def initialize(self) -> None:
         """Initialize."""
         self.entities = self.args.get('entities', {})
@@ -25,23 +26,32 @@ class Base(hass.Hass):
         self.handler_registry.cancel_timer_methods.append(self.cancel_timer)
 
         # Register custom constraints:
-        self.register_constraint('constrain_anyone_home')
-        self.register_constraint('constrain_noone_home')
+        self.register_constraint('constrain_anyone')
+        self.register_constraint('constrain_everyone')
+        self.register_constraint('constrain_noone')
         self.register_constraint('constrain_out_of_blackout')
         self.register_constraint('constrain_sun')
 
-    # --- CUSTOM CONSTRAINTS --------------------------------------------------
-    def constrain_anyone_home(self, required: bool) -> bool:
-        """Constrain execution to whether anyone is home."""
-        return not required or self.presence_manager.anyone(
-            self.presence_manager.HomeStates.home,
-            self.presence_manager.HomeStates.just_arrived)
+    def _constrain_presence(self, method: str,
+                            value: Union[str, None]) -> bool:
+        """Constrain presence in a generic fashion."""
+        if not value:
+            return True
 
-    def constrain_noone_home(self, required: bool) -> bool:
-        """Constrain execution to whether no one is home."""
-        return not required or self.presence_manager.noone(
-            self.presence_manager.HomeStates.home,
-            self.presence_manager.HomeStates.just_arrived)
+        return getattr(self.presence_manager, method)(
+            *[self.presence_manager.HomeStates[s] for s in value.split(',')])
+
+    def constrain_anyone(self, value: Union[str, None]) -> bool:
+        """Constrain execution to whether anyone is in a state."""
+        return self._constrain_presence('anyone', value)
+
+    def constrain_everyone(self, value: Union[str, None]) -> bool:
+        """Constrain execution to whether everyone is in a state."""
+        return self._constrain_presence('everyone', value)
+
+    def constrain_noone(self, value: Union[str, None]) -> bool:
+        """Constrain execution to whether no one is in a state."""
+        return self._constrain_presence('noone', value)
 
     def constrain_out_of_blackout(self, required: bool) -> bool:
         """Constrain execution to whether anyone is home."""
