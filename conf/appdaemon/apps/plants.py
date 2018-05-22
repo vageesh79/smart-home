@@ -1,6 +1,7 @@
 """Define automations for plants."""
 
 # pylint: disable=unused-argument,too-many-arguments
+# pylint: disable=attribute-defined-outside-init
 
 from typing import Union
 
@@ -22,6 +23,8 @@ class PlantAutomation(Automation):
 
         def initialize(self) -> None:
             """Initialize."""
+            self.low_moisture = False
+
             self.hass.listen_state(
                 self.low_moisture_detected,
                 self.entities['current_moisture'],
@@ -33,7 +36,10 @@ class PlantAutomation(Automation):
                                   kwargs: dict) -> None:
             """Notify when the plant's moisture is low."""
             key = HANDLER_PLANT_NEEDS_WATER.format(self.hass.friendly_name)
-            if int(new) < int(self.properties['moisture_threshold']):
+            if (not (self.low_moisture)
+                    and int(new) < int(self.properties['moisture_threshold'])):
+                self.low_moisture = True
+
                 self.hass.log(
                     'Notifying people at home that plant is low on moisture')
 
@@ -48,5 +54,6 @@ class PlantAutomation(Automation):
                     message,
                     key=key)
             else:
+                self.low_moisture = False
                 if key in self.hass.briefing_manager:
                     self.hass.briefing_manager.deregister(key)
