@@ -99,9 +99,10 @@ class WasherDryerAutomation(Automation):
             if new == self.hass.manager_app.States.dirty.value:
                 self.hass.briefing_manager.deregister(HANDLER_DISHWASHER_CLEAN)
             elif new == self.hass.manager_app.States.clean.value:
-                self.hass.notification_manager.send(
+                self.hass.notification_manager.repeat(
                     'Dishwasher Clean',
                     "Empty it now and you won't have to do it later!",
+                    60 * 60,
                     when=self.hass.datetime() + timedelta(minutes=15),
                     target='home',
                     data={'push': {
@@ -335,9 +336,10 @@ class VacuumAutomation(Automation):
             if new == self.hass.manager_app.BinStates.empty.value:
                 self.hass.briefing_manager.deregister(HANDLER_VACUUM_FULL)
             elif new == self.hass.manager_app.BinStates.full.value:
-                self.hass.notification_manager.send(
+                self.hass.notification_manager.repeat(
                     'Vacuum Full',
                     "Empty it now and you won't have to do it later!",
+                    60 * 60,
                     target='home',
                     data={'push': {
                         'category': 'appliances'
