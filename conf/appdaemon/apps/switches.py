@@ -30,15 +30,17 @@ class SwitchAutomation(Automation):
         def toggle(self, state: str) -> None:
             """Toggle the switch state."""
             if self.state == 'off' and state == 'on':
+                self.hass.log('Turning on: {0}'.format(
+                    self.entities['switch']))
                 self.hass.turn_on(self.entities['switch'])
             elif self.state == 'on' and state == 'off':
+                self.hass.log('Turning off: {0}'.format(
+                    self.entities['switch']))
                 self.hass.turn_off(self.entities['switch'])
 
         @callback
         def toggle_on_schedule(self, kwargs: dict) -> None:
             """Turn off the switch at a certain time."""
-            self.hass.log('Turning {0}'.format(self.properties['state']))
-
             self.toggle(kwargs['state'])
 
     class PresenceFailsafe(BaseFeature):

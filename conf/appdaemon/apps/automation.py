@@ -59,8 +59,7 @@ class Feature(object):
         if constraint_config:
             if constraint_config.get('key'):
                 self.constraint = 'input_boolean.{0}_{1}'.format(
-                    hass.name,
-                    constraint_config['key'])
+                    hass.name, constraint_config['key'])
             else:
                 self.constraint = 'input_boolean.{0}_{1}'.format(
                     hass.name, name)
