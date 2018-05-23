@@ -9,7 +9,6 @@ from typing import Tuple, Union
 from app import App
 from automation import Automation, Feature
 from lib.const import PEOPLE
-from lib.decorators import callback
 
 
 class PresenceAutomation(Automation):
@@ -26,7 +25,6 @@ class PresenceAutomation(Automation):
                 new=self.hass.presence_manager.HomeStates.home.value,
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def someone_arrived(self, event_name: str, data: dict,
                             kwargs: dict) -> None:
             """Announces any briefing items when someone is home."""
@@ -159,7 +157,6 @@ class PresenceManager(App):
                 target_state=self.HomeStates.extended_away)
 
     # --- CALLBACKS -----------------------------------------------------------
-    @callback
     def _change_input_select_cb(self, entity: Union[str, dict], attribute: str,
                                 old: str, new: str, kwargs: dict) -> None:
         """Change state of a home presence input select."""
@@ -177,7 +174,6 @@ class PresenceManager(App):
 
         self._set_input_select(input_select, target_state)
 
-    @callback
     def _presence_change_cb(self, entity: Union[str, dict], attribute: str,
                             old: str, new: str, kwargs: dict) -> None:
         """Fire an event when a device tracker changes state."""
@@ -202,7 +198,6 @@ class PresenceManager(App):
         self.fire_event(
             'PRESENCE_CHANGE', person=person, old=old, new=new, first=first)
 
-    @callback
     def _proximity_change_cb(self, entity: Union[str, dict], attribute: str,
                              old: dict, new: dict, kwargs: dict) -> None:
         """Lock up when we leave home."""

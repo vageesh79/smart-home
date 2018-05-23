@@ -7,7 +7,6 @@ from typing import Union
 
 from app import App
 from automation import Automation, Feature
-from lib.decorators import callback
 
 
 class ClimateManager(App):
@@ -62,7 +61,6 @@ class ClimateAutomation(Automation):
                 'PROXIMITY_CHANGE',
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def proximity_changed(self, event_name: str, data: dict,
                               kwargs: dict) -> None:
             """Respond to "PROXIMITY_CHANGE" events."""
@@ -105,7 +103,6 @@ class ClimateAutomation(Automation):
                     self.hass.log('Setting thermostat to "Home"')
                     self.hass.climate_manager.away_mode = False
 
-        @callback
         def arrived_home(self, event_name: str, data: dict,
                          kwargs: dict) -> None:
             """Last ditch: turn the thermostat to home when someone arrives."""
@@ -132,7 +129,6 @@ class ClimateAutomation(Automation):
                 new='cooling',
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def bad_aqi_detected(self, entity: Union[str, dict], attribute: str,
                              old: str, new: str, kwargs: dict) -> None:
             """Send select notifications when cooling and poor AQI."""

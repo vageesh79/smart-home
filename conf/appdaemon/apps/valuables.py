@@ -3,7 +3,6 @@
 # pylint: disable=unused-argument
 
 from automation import Automation, Feature
-from lib.decorators import callback
 
 
 class TileAutomation(Automation):
@@ -21,13 +20,11 @@ class TileAutomation(Automation):
                 new=self.hass.presence_manager.HomeStates.home.value,
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def arrived_home(self, event_name: str, data: dict,
                          kwargs: dict) -> None:
             """Start a timer after the person has arrived."""
             self.hass.run_in(self.check_for_tile, 60 * 5)
 
-        @callback
         def check_for_tile(self, kwargs: dict) -> None:
             """Notify the person if their Tile is missing."""
             tile = self.hass.get_state(self.entities['tile'], attribute='all')

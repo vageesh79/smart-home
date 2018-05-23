@@ -9,7 +9,6 @@ from automation import Automation, Feature
 from lib.const import (BLACKOUT_END, BLACKOUT_START,
                        HANDLER_SWITCH_SLEEP_TIMER,
                        HANDLER_SWITCH_VACATION_MODE)
-from lib.decorators import callback
 
 
 class SwitchAutomation(Automation):
@@ -38,7 +37,6 @@ class SwitchAutomation(Automation):
                     self.entities['switch']))
                 self.hass.turn_off(self.entities['switch'])
 
-        @callback
         def toggle_on_schedule(self, kwargs: dict) -> None:
             """Turn off the switch at a certain time."""
             self.toggle(kwargs['state'])
@@ -55,7 +53,6 @@ class SwitchAutomation(Automation):
                 constrain_noone='just_arrived,home',
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def switch_activated(self, entity: Union[str, dict], attribute: str,
                              old: str, new: str, kwargs: dict) -> None:
             """Turn the switch off if no one is home."""
@@ -77,7 +74,6 @@ class SwitchAutomation(Automation):
                 new='off',
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def switch_turned_off(self, entity: Union[str, dict], attribute: str,
                               old: str, new: str, kwargs: dict) -> None:
             """Reset the sleep timer when the switch turns off."""
@@ -86,7 +82,6 @@ class SwitchAutomation(Automation):
                 entity_id=self.entities['timer_slider'],
                 value=0)
 
-        @callback
         def timer_changed(self, entity: Union[str, dict], attribute: str,
                           old: str, new: str, kwargs: dict) -> None:
             """Start/stop a sleep timer for this switch."""
@@ -111,7 +106,6 @@ class SwitchAutomation(Automation):
                                                         self.timer_completed,
                                                         minutes * 60))
 
-        @callback
         def timer_completed(self, kwargs: dict) -> None:
             """Turn off a switch at the end of sleep timer."""
             self.hass.log('Sleep timer over; turning switch off')
@@ -154,7 +148,6 @@ class SwitchAutomation(Automation):
                 constrain_input_boolean=self.constraint,
                 constrain_sun='down')
 
-        @callback
         def someone_arrived(self, event_name: str, data: dict,
                             kwargs: dict) -> None:
             """Turn on after dark when someone comes homes."""
@@ -184,7 +177,6 @@ class SwitchAutomation(Automation):
                 constrain_anyone='just_arrived,home'
                 if self.properties.get('presence_required') else None)
 
-        @callback
         def cloud_coverage_reached(self, entity: Union[str, dict],
                                    attribute: str, old: str, new: str,
                                    kwargs: dict) -> None:
@@ -217,7 +209,6 @@ class SwitchAutomation(Automation):
                 'MODE_CHANGE',
                 mode='vacation_mode')
 
-        @callback
         def vacation_mode_activated(self, event_name: str, data: dict,
                                     kwargs: dict) -> None:
             """Respond to changes when a mode changes."""

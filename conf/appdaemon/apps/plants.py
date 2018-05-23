@@ -7,7 +7,6 @@ from typing import Union
 
 from automation import Automation, Feature
 from lib.const import HANDLER_PLANT_NEEDS_WATER
-from lib.decorators import callback
 
 
 class PlantAutomation(Automation):
@@ -30,7 +29,6 @@ class PlantAutomation(Automation):
                 self.entities['current_moisture'],
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def low_moisture_detected(self, entity: Union[str, dict],
                                   attribute: str, old: str, new: str,
                                   kwargs: dict) -> None:

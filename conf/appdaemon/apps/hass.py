@@ -12,7 +12,6 @@ from packaging import version
 
 from automation import Automation, Feature
 from lib.const import BLACKOUT_END, BLACKOUT_START
-from lib.decorators import callback
 
 
 class HomeAssistantAutomation(Automation):
@@ -57,7 +56,6 @@ class HomeAssistantAutomation(Automation):
                 theme=self.Themes.dark,
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def theme_changed(self, kwargs: dict) -> None:
             """Change the theme to a "day" variant in the morning."""
             self.current_theme = kwargs['theme']
@@ -82,7 +80,6 @@ class HomeAssistantAutomation(Automation):
                 action='off',
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def presence_changed(self, event_name: str, data: dict,
                              kwargs: dict) -> None:
             """Alter Vacation Mode based on presence."""
@@ -107,7 +104,6 @@ class HomeAssistantAutomation(Automation):
                 self.entities['notification'],
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def bad_login_detected(self, entity: Union[str, dict], attribute: str,
                                old: str, new: str, kwargs: dict) -> None:
             """Send a notification when there's a bad login attempt."""
@@ -197,7 +193,6 @@ class HomeAssistantAutomation(Automation):
                     installed=installed,
                     constrain_input_boolean=self.constraint)
 
-        @callback
         def update_tasmota_sensor(self, kwargs: dict) -> None:
             """Update installed Tasmota version every so often."""
             self.hass.set_state(
@@ -208,7 +203,6 @@ class HomeAssistantAutomation(Automation):
                     'icon': 'mdi:wifi'
                 })
 
-        @callback
         def version_change_detected(self, entity: Union[str, dict],
                                     attribute: str, old: str, new: str,
                                     kwargs: dict) -> None:

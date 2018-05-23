@@ -9,7 +9,6 @@ from typing import Tuple
 
 from app import App
 from automation import Automation, Feature
-from lib.decorators import callback
 
 
 class TrashAutomation(Automation):

@@ -11,7 +11,6 @@ from app import App
 from automation import Automation, Feature
 from lib.const import (HANDLER_DISHWASHER_CLEAN, HANDLER_VACUUM_FULL,
                        HANDLER_VACUUM_SCHEDULE)
-from lib.decorators import callback
 
 
 class WasherDryer(App):
@@ -65,7 +64,6 @@ class WasherDryerAutomation(Automation):
                 self.hass.manager_app.entities['status'],
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def power_changed(self, entity: Union[str, dict], attribute: str,
                           old: str, new: str, kwargs: dict) -> None:
             """Deal with changes to the power draw."""
@@ -92,7 +90,6 @@ class WasherDryerAutomation(Automation):
                 self.hass.manager_app.state = (
                     self.hass.manager_app.States.clean)
 
-        @callback
         def status_changed(self, entity: Union[str, dict], attribute: str,
                            old: str, new: str, kwargs: dict) -> None:
             """Deal with changes to the status."""
@@ -113,7 +110,6 @@ class WasherDryerAutomation(Automation):
                     'The dishwasher needs to be emptied.',
                     key=HANDLER_DISHWASHER_CLEAN)
 
-        @callback
         def response_from_push_notification(self, event_name: str, data: dict,
                                             kwargs: dict) -> None:
             """Respond to iOS notification to empty the appliance."""
@@ -204,7 +200,6 @@ class VacuumAutomation(Automation):
                     attribute=consumable,
                     constrain_input_boolean=self.constraint)
 
-        @callback
         def consumable_changed(self, entity: Union[str, dict], attribute: str,
                                old: str, new: str, kwargs: dict) -> None:
             """Create a task when a consumable is getting low."""
@@ -273,7 +268,6 @@ class VacuumAutomation(Automation):
                     toggle,
                     constrain_input_boolean=self.constraint)
 
-        @callback
         def alarm_changed(self, event_name: str, data: dict,
                           kwargs: dict) -> None:
             """Respond to 'ALARM_CHANGE' events."""
@@ -311,7 +305,6 @@ class VacuumAutomation(Automation):
                     'vacuum/start_pause',
                     entity_id=self.hass.manager_app.entities['vacuum'])
 
-        @callback
         def all_done(self, entity: Union[str, dict], attribute: str, old: str,
                      new: str, kwargs: dict) -> None:
             """Re-arm security (if needed) when done."""
@@ -329,7 +322,6 @@ class VacuumAutomation(Automation):
                 self.hass.manager_app.BinStates.full)
             self.initiated_by_app = False
 
-        @callback
         def bin_state_changed(self, entity: Union[str, dict], attribute: str,
                               old: str, new: str, kwargs: dict) -> None:
             """Listen for changes in bin status."""
@@ -362,7 +354,6 @@ class VacuumAutomation(Automation):
                     self.hass.parse_time(self.properties['schedule_time']),
                     constrain_input_boolean=self.constraint))
 
-        @callback
         def errored(self, entity: Union[str, dict], attribute: str, old: str,
                     new: str, kwargs: dict) -> None:
             """Brief when Wolfie's had an error."""
@@ -370,7 +361,6 @@ class VacuumAutomation(Automation):
                 self.hass.briefing_manager.BriefingTypes.one_time,
                 'Wolfie is stuck or has come off of his charger.')
 
-        @callback
         def response_from_push_notification(self, event_name: str, data: dict,
                                             kwargs: dict) -> None:
             """Respond to iOS notification to empty vacuum."""
@@ -386,20 +376,17 @@ class VacuumAutomation(Automation):
                 '{0} emptied the vacuum.'.format(target),
                 target='not {0}'.format(target))
 
-        @callback
         def schedule_changed(self, entity: Union[str, dict], attribute: str,
                              old: str, new: str, kwargs: dict) -> None:
             """Reload the schedule when one of the input booleans change."""
             self.create_schedule()
 
-        @callback
         def start_by_schedule(self, kwargs: dict) -> None:
             """Start cleaning via the schedule."""
             if not self.initiated_by_app:
                 self.hass.manager_app.start()
                 self.initiated_by_app = True
 
-        @callback
         def start_by_switch(self, event_name: str, data: dict,
                             kwargs: dict) -> None:
             """Start cleaning via the switch."""

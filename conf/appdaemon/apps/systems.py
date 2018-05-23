@@ -6,7 +6,6 @@
 from typing import Union
 
 from automation import Automation, Feature
-from lib.decorators import callback
 
 
 class SystemsAutomation(Automation):
@@ -26,7 +25,6 @@ class SystemsAutomation(Automation):
                     attribute='all',
                     constrain_input_boolean=self.constraint)
 
-        @callback
         def low_battery_detected(self, entity: Union[str, dict],
                                  attribute: str, old: str, new: dict,
                                  kwargs: dict) -> None:
@@ -64,7 +62,6 @@ class SystemsAutomation(Automation):
                 duration=self.properties['seconds'],
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def limit_reached(self, entity: Union[str, dict], attribute: str,
                           old: str, new: str, kwargs: dict) -> None:
             """Notify when the threshold is reached."""
@@ -87,7 +84,6 @@ class SystemsAutomation(Automation):
                 self.hass.parse_time(self.properties['tasks_schedule_time']),
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def night_has_arrived(self, kwargs: dict) -> None:
             """Perform nightly tasks"""
             self.hass.log('Performing nightly tasks')
@@ -104,7 +100,6 @@ class SystemsAutomation(Automation):
                 self.entities['ssl_expiry'],
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def ssl_expiration_approaching(self, entity: Union[str, dict],
                                        attribute: str, old: str, new: str,
                                        kwargs: dict) -> None:

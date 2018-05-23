@@ -9,7 +9,6 @@ from typing import Union
 
 from app import App
 from automation import Automation, Feature
-from lib.decorators import callback
 
 
 class SecurityAutomation(Automation):
@@ -40,7 +39,6 @@ class SecurityAutomation(Automation):
                 constrain_input_boolean=self.constraint,
                 constrain_noone='just_arrived,home')
 
-        @callback
         def house_insecure(self, entity: Union[str, dict], attribute: str,
                            old: str, new: str, kwargs: dict) -> None:
             """Send notifications when the house has been left insecure."""
@@ -55,7 +53,6 @@ class SecurityAutomation(Automation):
                     'category': 'security'
                 }})
 
-        @callback
         def response_from_push_notification(self, event_name: str, data: dict,
                                             kwargs: dict) -> None:
             """Respond to 'ios.notification_action_fired' events."""
@@ -88,7 +85,6 @@ class SecurityAutomation(Automation):
                 'PROXIMITY_CHANGE',
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def everyone_gone(self, event_name: str, data: dict,
                           kwargs: dict) -> None:
             """Respond to 'PROXIMITY_CHANGE' events."""
@@ -125,13 +121,11 @@ class SecurityAutomation(Automation):
                 self.hass.call_service(
                     'scene/turn_on', entity_id='scene.good_night')
 
-        @callback
         def in_bed(self, entity: Union[str, dict], attribute: str, old: str,
                    new: str, kwargs: dict) -> None:
             """Lock up the house when we're in bed (if needed)."""
             self.activate()
 
-        @callback
         def midnight(self, kwargs: dict) -> None:
             """Lock up the house at midnight (if needed)."""
             self.activate()
@@ -153,7 +147,6 @@ class SecurityAutomation(Automation):
                 duration=60 * int(self.properties['time_left_open']),
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def left_open(self, entity: Union[str, dict], attribute: str, old: str,
                       new: str, kwargs: dict) -> None:
             """Send notifications when the garage has been left open."""
@@ -166,7 +159,6 @@ class SecurityAutomation(Automation):
                     'category': 'garage'
                 }})
 
-        @callback
         def response_from_push_notification(self, event_name: str, data: dict,
                                             kwargs: dict) -> None:
             """Respond to 'ios.notification_action_fired' events."""

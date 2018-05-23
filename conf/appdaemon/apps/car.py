@@ -8,7 +8,6 @@ from typing import Tuple, Union
 
 from automation import Automation, Feature
 from lib.const import PEOPLE
-from lib.decorators import callback, endpoint
 
 
 class CarAutomation(Automation):
@@ -26,7 +25,6 @@ class CarAutomation(Automation):
             eta = self.hass.datetime() + timedelta(minutes=int(travel_time))
             return eta.time().strftime('%I:%M %p')
 
-        @endpoint
         def get_eta(self, data: dict) -> Tuple[dict, int]:
             """Define an endpoint to send Aaron's ETA."""
             if self.hass.presence_manager.noone(
@@ -67,7 +65,6 @@ class CarAutomation(Automation):
                 attribute='fuel_level',
                 constrain_input_boolean=self.constraint)
 
-        @callback
         def low_fuel_found(self, entity: Union[str, dict], attribute: str,
                            old: str, new: str, kwargs: dict) -> None:
             """Creates OmniFocus todos whenever my car is low on gas."""
