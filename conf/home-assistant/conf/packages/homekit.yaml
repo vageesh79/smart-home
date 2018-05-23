@@ -1,0 +1,31 @@
+---
+automation:
+  - alias: 'Start HomeKit'
+    trigger:
+      platform: event
+      event_type: zwave.network_ready
+    action:
+      service: homekit.start
+      
+homekit:
+  auto_start: false
+  filter:
+    include_domains:
+      - alarm_control_panel
+      - light
+      - lock
+    include_entities:
+      - climate.thermostat
+      - cover.garage_door
+      - sensor.average_indoor_temperature
+      - sensor.average_indoor_humidity
+      - switch.fireplace
+      - switch.front_patio_light_switch
+      - switch.kitchen_patio_light_switch
+      - switch.master_bathroom_fan_switch
+      - switch.master_toilet_fan_switch
+      - switch.media_center
+      - switch.reading_lamp
+      - switch.sofa_lamp
+      - switch.pihole_enabled
+      - switch.wolfie_cycle
