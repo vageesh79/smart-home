@@ -6,11 +6,11 @@ from math import ceil
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
-import homeassistant.util.dt as dt
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import ATTR_ATTRIBUTION, CONF_MONITORED_CONDITIONS
 from homeassistant.helpers.entity import Entity
 from homeassistant.util import Throttle
+from homeassistant.util.dt import now, parse_date
 
 _LOGGER = getLogger(__name__)
 REQUIREMENTS = ['pyden==0.4.1']
@@ -18,6 +18,8 @@ REQUIREMENTS = ['pyden==0.4.1']
 ATTR_PICKUP_DATE = 'pickup_date'
 
 CONF_PLACE_ID = 'recollect_place_id'
+
+DEFAULT_ATTR = 'City and County of Denver, CO'
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=10)
 
@@ -30,41 +32,34 @@ PICKUP_TYPES = {
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_PLACE_ID): cv.string,
-    vol.Optional(CONF_MONITORED_CONDITIONS, default=[]):
+    vol.Optional(CONF_MONITORED_CONDITIONS, default=list(PICKUP_TYPES)):
         vol.All(cv.ensure_list, [vol.In(PICKUP_TYPES)]),
 })
 
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Setup the platform."""
-    import pyden
-
-    recollect_place_id = config.get(CONF_PLACE_ID)
-    _LOGGER.debug('Recollect place ID: %s', recollect_place_id)
-
-    pickups_to_watch = config.get(CONF_MONITORED_CONDITIONS)
-    _LOGGER.debug('Pickup types being monitored: %s', pickups_to_watch)
+    from pyden import TrashClient
+    from pyden.exceptions import GeocodingError, HTTPError
 
     try:
-        client = pyden.TrashClient(recollect_place_id)
-    except pyden.exceptions.GeocodingError as exc_info:
-        _LOGGER.error('An error occurred while geocoding: %s', str(exc_info))
+        client = TrashClient(config[CONF_PLACE_ID])
+    except GeocodingError as exc:
+        _LOGGER.error('An error occurred while geocoding: %s', exc)
         return False
-    except pyden.exceptions.HTTPError as exc_info:
-        _LOGGER.error('An HTTP error occurred: %s', str(exc_info))
-        return False
-    except Exception as exc_info:  # pylint: disable=broad-except
-        _LOGGER.error('An unknown error occurred...')
-        _LOGGER.debug(str(exc_info))
+    except HTTPError as exc:
+        _LOGGER.error('An HTTP error occurred: %s', exc)
         return False
 
     sensors = []
-    for pickup_type in pickups_to_watch:
+    for pickup_type in config[CONF_MONITORED_CONDITIONS]:
         name, icon = PICKUP_TYPES[pickup_type]
         data = PickupData(client, pickup_type, hass.config.time_zone)
         sensors.append(DenverTrashSensor(data, name, icon))
 
     add_devices(sensors, True)
+
+    return True
 
 
 class DenverTrashSensor(Entity):
@@ -72,6 +67,7 @@ class DenverTrashSensor(Entity):
 
     def __init__(self, data, name, icon):
         """Initialize."""
+        self._attrs = {ATTR_ATTRIBUTION: DEFAULT_ATTR}
         self._data = data
         self._icon = icon
         self._name = name
@@ -80,12 +76,7 @@ class DenverTrashSensor(Entity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        if self._data:
-            return {
-                ATTR_ATTRIBUTION: 'City and County of Denver, CO',
-                ATTR_PICKUP_DATE:
-                    dt.parse_date(self._data.raw_date).strftime('%B %e, %Y')
-            }
+        return self._attrs
 
     @property
     def icon(self):
@@ -109,31 +100,22 @@ class DenverTrashSensor(Entity):
 
         self._data.update()
         self._state = self._data.humanized_pickup
+        self._attrs.update({ATTR_PICKUP_DATE: self._data.raw_date})
 
 
-class PickupData(object):
+class PickupData(object):  # pylint: disable=too-few-public-methods
     """ Define a class to deal with representations of the pickup data."""
 
     def __init__(self, client, pickup_type, local_tz):
         self._client = client
-        self._humanized_pickup = None
         self._local_tz = local_tz
         self._pickup_type = pickup_type
-        self._raw_date = None
-
-    @property
-    def humanized_pickup(self):
-        """Return the humanized next pickup number."""
-        return self._humanized_pickup
-
-    @property
-    def raw_date(self):
-        """Return the raw date of the pickup."""
-        return self._raw_date
+        self.humanized_pickup = None
+        self.raw_date = None
 
     def _humanize_pickup(self, future_date):
         """Humanize how many pickups away this type is."""
-        today = dt.now(self._local_tz).date()
+        today = now(self._local_tz).date()
         delta_days = (future_date - today).days
 
         if delta_days < 1:
@@ -149,14 +131,12 @@ class PickupData(object):
 
     def update(self):
         """Update the data for the pickup."""
-        import pyden.exceptions as exceptions
+        from pyden.exceptions import HTTPError
 
         try:
-            raw_date = self._client.next_pickup(self._pickup_type)
-            next_date = dt.parse_date(raw_date)
-            self._raw_date = raw_date
-            self._humanized_pickup = self._humanize_pickup(next_date)
-        except exceptions.HTTPError as exc_info:
-            _LOGGER.error('Unable to get next %s pickup date',
-                          self._pickup_type)
-            _LOGGER.debug(str(exc_info))
+            next_date = parse_date(self._client.next_pickup(self._pickup_type))
+            self.humanized_pickup = self._humanize_pickup(next_date)
+            self.raw_date = next_date.strftime('%B %e, %Y')
+        except HTTPError as exc:
+            _LOGGER.error('Unable to get next %s pickup date: %s',
+                          self._pickup_type, exc)
