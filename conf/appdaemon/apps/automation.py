@@ -3,7 +3,7 @@
 # pylint: disable=too-many-arguments,attribute-defined-outside-init
 # pylint: disable=not-callable,protected-access,too-few-public-methods
 
-from base import Base
+from core import Base
 
 
 class Automation(Base):
@@ -28,6 +28,7 @@ class Automation(Base):
                 self.log('Missing class for feature: {0}'.format(name))
                 continue
 
+            features = []  # type: ignore
             feature_obj = feature_class(self, name, {
                 **self.entities,
                 **feature.get('entities', {})
@@ -36,9 +37,16 @@ class Automation(Base):
                 **feature.get('properties', {})
             }, feature.get('constraint'))
 
+            if not feature_obj.repeatable and feature_obj in features:
+                self.error(
+                    'Refusing to reinitialize single feature: {0}'.format(
+                        name))
+                continue
+
             self.log('Initializing feature {0} (constraint: {1})'.format(
                 name, feature_obj.constraint))
 
+            features.append(feature_obj)
             feature_obj.initialize()
 
 
@@ -54,6 +62,7 @@ class Feature(object):
         """Initiliaze."""
         self.entities = entities
         self.hass = hass
+        self.name = name
         self.properties = properties
 
         if constraint_config:
@@ -65,6 +74,15 @@ class Feature(object):
                     hass.name, name)
         else:
             self.constraint = None
+
+    def __eq__(self, other):
+        """Define equality based on name."""
+        return self.name == other.name
+
+    @property
+    def repeatable(self) -> bool:
+        """Define whether a feature can be implemented multiple times."""
+        return False
 
     def initialize(self) -> None:
         """Define an initializer method."""

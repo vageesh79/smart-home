@@ -2,7 +2,7 @@
 
 # pylint: disable=too-few-public-methods,attribute-defined-outside-init
 
-from base import Base
+from core import Base
 
 
 class App(Base):

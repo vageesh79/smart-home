@@ -6,9 +6,9 @@
 from typing import Union
 
 from automation import Automation, Feature
-from lib.const import (BLACKOUT_END, BLACKOUT_START,
-                       HANDLER_SWITCH_SLEEP_TIMER,
-                       HANDLER_SWITCH_VACATION_MODE)
+from lib.const import (
+    BLACKOUT_END, BLACKOUT_START, HANDLER_SWITCH_SLEEP_TIMER,
+    HANDLER_SWITCH_VACATION_MODE)
 
 
 class SwitchAutomation(Automation):
@@ -117,6 +117,11 @@ class SwitchAutomation(Automation):
 
     class ToggleAtTime(BaseFeature):
         """Define a feature to toggle a switch at a certain time."""
+
+        @property
+        def repeatable(self) -> bool:
+            """Define whether a feature can be implemented multiple times."""
+            return True
 
         def initialize(self) -> None:
             """Initialize."""
