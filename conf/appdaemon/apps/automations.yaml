@@ -455,27 +455,6 @@ outdoor_lights_automation:
         name: Simulate vacation mode
         icon: mdi:beach
         initial: true
-presence_automation:
-  module: presence
-  class: PresenceAutomation
-  dependencies:
-    - briefing_manager
-    - do_not_disturb
-    - guest_mode
-    - handler_registry
-    - notification_manager
-    - presence_manager
-    - utilities
-    - vacation_mode
-  features:
-    - name: briefing_when_home
-      mode_alterations:
-        do_not_disturb: disable
-        vacation_mode: disable
-      constraint:
-        name: Briefing when coming home
-        icon: mdi:bell
-        initial: true
 security_automation:
   module: security
   class: SecurityAutomation

@@ -144,27 +144,3 @@ class TTS(App):
                                         final_string))
 
         self._last_spoken_text = text
-
-
-class TTSAutomation(Automation):
-    """Define a class to represent automations for presence."""
-
-    # --- INITIALIZERS --------------------------------------------------------
-    def activate_briefing_when_home(self, constraint_name: str,
-                                    properties: dict) -> None:
-        """Activate the feature to announce a briefing when we come home."""
-        self.listen_event(
-            self._briefing_when_home_cb,
-            'PRESENCE_CHANGE',
-            new=self.presence_manager.HomeStates.home.value,
-            first=True,
-            constrain_input_boolean=constraint_name,
-            constrain_blackout='out')
-
-    # --- CALLBACKS -----------------------------------------------------------
-    def _briefing_when_home_cb(self, event_name: str, data: dict,
-                               kwargs: dict) -> None:
-        """Announces any briefing items when someone is home."""
-        if self.briefing_manager.briefings:
-            self.tts.speak("Here's what's going on: {0}".format(
-                self.briefing_manager.briefing_text))

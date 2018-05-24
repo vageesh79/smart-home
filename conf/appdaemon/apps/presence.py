@@ -7,34 +7,7 @@ from enum import Enum
 from typing import Tuple, Union
 
 from app import App
-from automation import Automation, Feature
 from lib.const import PEOPLE
-
-
-class PresenceAutomation(Automation):
-    """Define a class to represent automations for presence."""
-
-    class BriefingWhenHome(Feature):
-        """Define a feature to send a briefing when someone comes home."""
-
-        def initialize(self) -> None:
-            """Initialize."""
-            self.hass.listen_event(
-                self.someone_arrived,
-                'PRESENCE_CHANGE',
-                new=self.hass.presence_manager.HomeStates.home.value,
-                constrain_input_boolean=self.constraint)
-
-        def someone_arrived(self, event_name: str, data: dict,
-                            kwargs: dict) -> None:
-            """Announces any briefing items when someone is home."""
-            self.hass.log('Someone arrived home; sending briefing')
-
-            if self.hass.briefing_manager.briefings:
-                self.hass.notification_manager.send(
-                    'Home Briefing',
-                    self.hass.briefing_manager.briefing_text,
-                    target=data['person'])
 
 
 class PresenceManager(App):

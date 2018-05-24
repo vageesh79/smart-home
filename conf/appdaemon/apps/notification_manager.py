@@ -215,6 +215,10 @@ class NotificationManager(App):
             self.handler_registry.deregister(notification.key, cancel=False)
 
     # --- APP API -------------------------------------------------------------
+    def cancel(self, key: str) -> None:
+        """Cancels a scheduled notification."""
+        self.handler_registry.deregister(key)
+
     def create_omnifocus_task(self, title: str) -> None:
         """Create a task in Aaron's omnifocus."""
         self.notify(

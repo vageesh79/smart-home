@@ -11,12 +11,6 @@ alexa:
     - tts
     - utilities
     - wolfie
-briefing_manager:
-  module: briefing_manager
-  class: BriefingManager
-  dependencies:
-    - handler_registry
-    - utilities
 climate_manager:
   module: climate
   class: ClimateManager

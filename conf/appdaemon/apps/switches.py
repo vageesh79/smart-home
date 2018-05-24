@@ -6,9 +6,9 @@
 from typing import Union
 
 from automation import Automation, Feature
-from lib.const import (
-    BLACKOUT_END, BLACKOUT_START, HANDLER_SWITCH_SLEEP_TIMER,
-    HANDLER_SWITCH_VACATION_MODE)
+from lib.const import (BLACKOUT_END, BLACKOUT_START,
+                       HANDLER_SWITCH_SLEEP_TIMER,
+                       HANDLER_SWITCH_VACATION_MODE)
 
 
 class SwitchAutomation(Automation):
@@ -92,19 +92,14 @@ class SwitchAutomation(Automation):
                 self.hass.log('Deactivating sleep timer')
 
                 self.toggle('off')
-
-                if key in self.hass.handler_registry:
-                    self.hass.handler_registry.deregister(key)
+                self.hass.handler_registry.deregister(key)
             else:
                 self.hass.log(
-                    'Activating sleep timer for {0} minutes'.format(minutes))
+                    'Activating sleep timer: {0} minutes'.format(minutes))
 
                 self.toggle('on')
-
-                self.hass.handler_registry.register(key,
-                                                    self.hass.run_in(
-                                                        self.timer_completed,
-                                                        minutes * 60))
+                handle = self.hass.run_in(self.timer_completed, minutes * 60)
+                self.hass.handler_registry.register(key, handle)
 
         def timer_completed(self, kwargs: dict) -> None:
             """Turn off a switch at the end of sleep timer."""
