@@ -9,8 +9,9 @@ from typing import Union
 
 from app import App
 from automation import Automation, Feature
-from lib.const import (HANDLER_DISHWASHER_CLEAN, HANDLER_VACUUM_FULL,
-                       HANDLER_VACUUM_SCHEDULE)
+from lib.const import (
+    HANDLER_DISHWASHER_CLEAN, HANDLER_DISHWASHER_CLEAN_BRIEFING,
+    HANDLER_VACUUM_FULL, HANDLER_VACUUM_FULL_BRIEFING, HANDLER_VACUUM_SCHEDULE)
 
 
 class WasherDryer(App):
@@ -94,13 +95,16 @@ class WasherDryerAutomation(Automation):
                            old: str, new: str, kwargs: dict) -> None:
             """Deal with changes to the status."""
             if new == self.hass.manager_app.States.dirty.value:
-                self.hass.briefing_manager.deregister(HANDLER_DISHWASHER_CLEAN)
+                self.hass.handler_registry.deregister(HANDLER_DISHWASHER_CLEAN)
+                self.hass.briefing_manager.deregister(
+                    HANDLER_DISHWASHER_CLEAN_BRIEFING)
             elif new == self.hass.manager_app.States.clean.value:
                 self.hass.notification_manager.repeat(
                     'Dishwasher Clean',
                     "Empty it now and you won't have to do it later!",
                     60 * 60,
                     when=self.hass.datetime() + timedelta(minutes=15),
+                    key=HANDLER_DISHWASHER_CLEAN,
                     target='home',
                     data={'push': {
                         'category': 'appliances'
@@ -108,7 +112,7 @@ class WasherDryerAutomation(Automation):
                 self.hass.briefing_manager.register(
                     self.hass.briefing_manager.BriefingTypes.recurring,
                     'The dishwasher needs to be emptied.',
-                    key=HANDLER_DISHWASHER_CLEAN)
+                    key=HANDLER_DISHWASHER_CLEAN_BRIEFING)
 
         def response_from_push_notification(self, event_name: str, data: dict,
                                             kwargs: dict) -> None:
@@ -326,12 +330,15 @@ class VacuumAutomation(Automation):
                               old: str, new: str, kwargs: dict) -> None:
             """Listen for changes in bin status."""
             if new == self.hass.manager_app.BinStates.empty.value:
-                self.hass.briefing_manager.deregister(HANDLER_VACUUM_FULL)
+                self.hass.handler_registry.deregister(HANDLER_VACUUM_FULL)
+                self.hass.briefing_manager.deregister(
+                    HANDLER_VACUUM_FULL_BRIEFING)
             elif new == self.hass.manager_app.BinStates.full.value:
                 self.hass.notification_manager.repeat(
                     'Vacuum Full',
                     "Empty it now and you won't have to do it later!",
                     60 * 60,
+                    key=HANDLER_VACUUM_FULL,
                     target='home',
                     data={'push': {
                         'category': 'appliances'
@@ -339,7 +346,7 @@ class VacuumAutomation(Automation):
                 self.hass.briefing_manager.register(
                     self.hass.briefing_manager.BriefingTypes.recurring,
                     'The vacuum needs to be emptied.',
-                    key=HANDLER_VACUUM_FULL)
+                    key=HANDLER_VACUUM_FULL_BRIEFING)
 
         def create_schedule(self) -> None:
             """Create the vacuuming schedule from the on booleans."""

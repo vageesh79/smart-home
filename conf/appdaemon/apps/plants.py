@@ -6,7 +6,8 @@
 from typing import Union
 
 from automation import Automation, Feature
-from lib.const import HANDLER_PLANT_NEEDS_WATER
+from lib.const import (HANDLER_PLANT_NEEDS_WATER,
+                       HANDLER_PLANT_NEEDS_WATER_BRIEFING)
 
 
 class PlantAutomation(Automation):
@@ -33,25 +34,29 @@ class PlantAutomation(Automation):
                                   attribute: str, old: str, new: str,
                                   kwargs: dict) -> None:
             """Notify when the plant's moisture is low."""
-            key = HANDLER_PLANT_NEEDS_WATER.format(self.hass.friendly_name)
             if (not (self.low_moisture)
                     and int(new) < int(self.properties['moisture_threshold'])):
-                self.low_moisture = True
-
                 self.hass.log(
                     'Notifying people at home that plant is low on moisture')
 
                 message = '{0} is at {1}% moisture and needs water.'.format(
                     self.hass.friendly_name, self.current_moisture),
-                self.hass.notification_manager.send(
+                self.hass.notification_manager.repeat(
                     '{0} is Dry'.format(self.hass.friendly_name),
                     message,
+                    60 * 60,
+                    key=HANDLER_PLANT_NEEDS_WATER_BRIEFING.format(
+                        self.hass.friendly_name),
                     target='home')
                 self.hass.briefing_manager.register(
                     self.hass.briefing_manager.BriefingTypes.recurring,
                     message,
-                    key=key)
+                    key=HANDLER_PLANT_NEEDS_WATER_BRIEFING.format(
+                        self.hass.friendly_name))
             else:
                 self.low_moisture = False
-                if key in self.hass.briefing_manager:
-                    self.hass.briefing_manager.deregister(key)
+                self.hass.handler_registry.deregister(
+                    HANDLER_PLANT_NEEDS_WATER.format(self.hass.friendly_name))
+                self.hass.briefing_manager.deregister(
+                    HANDLER_PLANT_NEEDS_WATER_BRIEFING.format(
+                        self.hass.friendly_name))
