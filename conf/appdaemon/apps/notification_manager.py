@@ -69,6 +69,9 @@ class NotificationManager(App):
 
     def _dispatch(self, notification: Notification) -> None:
         """Send a single (immediate or scheduled) notification."""
+        if not notification.when:
+            notification.when = self.datetime() + timedelta(seconds=1)
+
         notification = self._blackout_reschedule(notification)
 
         if not notification.key:
@@ -259,7 +262,7 @@ class NotificationManager(App):
                 interval=interval,
                 key=key,
                 target=target,
-                when=when if when else self.datetime()))
+                when=when))
 
     def send(self,
              title: str,
@@ -271,11 +274,6 @@ class NotificationManager(App):
              blackout_start_time: str = const.BLACKOUT_START,
              blackout_end_time: str = const.BLACKOUT_END) -> None:
         """Send a notification to one or more targets."""
-        if when:
-            _when = when
-        else:
-            _when = self.datetime() + timedelta(seconds=1)
-
         self._dispatch(
             Notification(
                 Notification.NotificationTypes.single,
@@ -286,4 +284,4 @@ class NotificationManager(App):
                 data=data,
                 key=key,
                 target=target,
-                when=_when))
+                when=when))
