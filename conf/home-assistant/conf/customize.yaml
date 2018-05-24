@@ -184,6 +184,10 @@ switch.master_toilet_fan_switch:
   icon: "mdi:fan"
 switch.mqtt_mosquitto:
   icon: "mdi:access-point-network"
+sensor.openipc_available:
+  icon: "mdi:cctv"
+sensor.yi_hack_available:
+  icon: "mdi:cctv"
 switch.pihole:
   icon: "mdi:laptop-off"
 switch.pihole_enabled:

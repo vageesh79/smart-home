@@ -15,24 +15,24 @@ OUTPUT = {}  # type: ignore
 with open(FEATURE_CONSTRAINTS, 'r') as file:
     DATA = yaml.load(file)
     for entity_name, automation_attrs in DATA.items():
+        global_constraint = automation_attrs.get('constraint')
         for feature in automation_attrs.get('features', {}):
-            if not feature.get('constraint'):
-                continue
+            if feature.get('constraint'):
+                constraint = feature['constraint']
+            else:
+                constraint = global_constraint
 
-            if feature['constraint'].get('key'):
-                key = '{0}_{1}'.format(entity_name,
-                                       feature['constraint']['key'])
+            if constraint.get('key'):
+                key = '{0}_{1}'.format(entity_name, constraint['key'])
             else:
                 key = '{0}_{1}'.format(entity_name, feature['name'])
 
-            if key in OUTPUT:
-                raise ValueError('Duplicate detected: {0}'.format(key))
-
-            OUTPUT[key] = {
-                'name': feature['constraint']['name'],
-                'icon': feature['constraint']['icon'],
-                'initial': feature['constraint']['initial']
-            }
+            if key not in OUTPUT:
+                OUTPUT[key] = {
+                    'name': constraint['name'],
+                    'icon': constraint['icon'],
+                    'initial': constraint['initial']
+                }
 
 if ARGS.details:
     print(yaml.dump(OUTPUT, default_flow_style=False))

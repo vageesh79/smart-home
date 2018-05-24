@@ -111,10 +111,6 @@ outdoor_lights_automation_vacation_mode:
   icon: mdi:beach
   initial: true
   name: Simulate vacation mode
-presence_automation_briefing_when_home:
-  icon: mdi:bell
-  initial: true
-  name: Briefing when coming home
 security_automation_absent_insecure:
   icon: mdi:lock-open
   initial: true
@@ -135,10 +131,6 @@ security_automation_notify_on_change:
   icon: mdi:shield-half-full
   initial: false
   name: Notify when state changes
-subaru_legacy_automation_drive_home_prompt:
-  icon: mdi:home-map-marker
-  initial: true
-  name: Prompt to open up
 subaru_legacy_automation_notify_eta:
   icon: mdi:car
   initial: true

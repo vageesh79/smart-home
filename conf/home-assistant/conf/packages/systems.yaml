@@ -64,8 +64,10 @@ group:
       - sensor.hadockermon_installed
       - sensor.hass_available
       - sensor.hass_installed
+      - sensor.openipc_available
       - sensor.tasmota_available
       - sensor.lowest_tasmota_installed
+      - sensor.yi_hack_available
 
 sensor:
   - platform: cert_expiry
@@ -106,6 +108,24 @@ sensor:
       -H "Content-Type: application/json"
       https://api.github.com/repos/arendst/Sonoff-Tasmota/releases/latest
     value_template: '{{ value_json.tag_name[1:] }}'
+    scan_interval: 300
+  - platform: command_line
+    name: OpenIPC Available
+    command: >-
+      curl -L
+      -H "User-Agent: Home Assistant"
+      -H "Content-Type: application/json"
+      https://api.github.com/repos/openipcamera/openipc-firmware/releases/latest
+    value_template: '{{ value_json.tag_name }}'
+    scan_interval: 300
+  - platform: command_line
+    name: Yi Hack Available
+    command: >-
+      curl -L
+      -H "User-Agent: Home Assistant"
+      -H "Content-Type: application/json"
+      https://api.github.com/repos/shadow-1/yi-hack-v3/releases/latest
+    value_template: '{{ value_json.tag_name }}'
     scan_interval: 300
   - platform: file
     name: AppDaemon Installed
