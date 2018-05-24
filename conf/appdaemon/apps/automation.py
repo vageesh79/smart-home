@@ -13,7 +13,8 @@ class Automation(Base):
         """Initialize."""
         super().initialize()
 
-        self.friendly_name = self.args.get('friendly_name', None)
+        self.friendly_name = self.args.get('friendly_name')
+        constraint = self.args.get('constraint')
 
         if self.args.get('manager_app'):
             self.manager_app = getattr(self, self.args['manager_app'])
@@ -35,7 +36,7 @@ class Automation(Base):
             }, {
                 **self.properties,
                 **feature.get('properties', {})
-            }, feature.get('constraint'))
+            }, feature.get('constraint', constraint))
 
             if not feature_obj.repeatable and feature_obj in features:
                 self.error(

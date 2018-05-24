@@ -185,34 +185,32 @@ hass_automation:
         initial: true
     - name: new_version_notification
       entities:
-        version_sensors:
-          appdaemon: !!python/tuple [
-            sensor.appdaemon_installed,
-            sensor.appdaemon_available
-          ]
-          ha_dockermon: !!python/tuple [
-            sensor.hadockermon_installed,
-            sensor.hadockermon_available
-          ]
-          hass: !!python/tuple [sensor.hass_installed, sensor.hass_available]
-          tasmota: !!python/tuple [
-            sensor.lowest_tasmota_installed,
-            sensor.tasmota_available
-          ]
+        available: sensor.appdaemon_available
       properties:
-        apps:
-          appdaemon: AppDaemon
-          ha_dockermon: ha-dockermon
-          hass: Home Assistant
-          tasmota: Tasmota
+        app_name: AppDaemon
+    - name: new_version_notification
+      entities:
+        available: sensor.hadockermon_available
+      properties:
+        app_name: ha-dockermon
+    - name: new_version_notification
+      entities:
+        available: sensor.hass_available
+      properties:
+        app_name: Home Assistant
+    - name: new_tasmota_version_notification
+      entities:
+        available: sensor.tasmota_available
+      properties:
+        app_name: Tasmota
         tasmota_hosts:
           - climatesensor2-5325.phil.iot
           - salt-lamp-1-5292.phil.iot
           - salt-lamp-2-3544.phil.iot
-      constraint:
-        name: Notify of new versions
-        icon: mdi:home-assistant
-        initial: true
+  constraint:
+    name: Notify of new versions
+    icon: mdi:home-assistant
+    initial: true
 living_room_lights_automation:
   module: switches
   class: SwitchAutomation

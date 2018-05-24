@@ -7,7 +7,6 @@ from datetime import timedelta
 from enum import Enum
 from typing import Union
 
-import requests
 from packaging import version
 
 from automation import Automation, Feature
@@ -148,8 +147,37 @@ class HomeAssistantAutomation(Automation):
         """Define a feature to detect new versions of key apps."""
 
         @property
+        def repeatable(self) -> bool:
+            """Define whether a feature can be implemented multiple times."""
+            return True
+
+        def initialize(self) -> None:
+            """Initialize."""
+            self.hass.listen_state(
+                self.version_change_detected,
+                self.entities['available'],
+                constrain_input_boolean=self.constraint)
+
+        def version_change_detected(self, entity: Union[str, dict],
+                                    attribute: str, old: str, new: str,
+                                    kwargs: dict) -> None:
+            """Notify me when there's a new app version."""
+            self.hass.log('New {0} version detected: {1}'.format(
+                self.properties['app_name'], new))
+
+            self.hass.notification_manager.send(
+                'New {0}'.format(self.properties['app_name']),
+                'Version detected: {0}'.format(new),
+                target='Aaron')
+
+    class NewTasmotaVersionNotification(NewVersionNotification):
+        """Define a feature to detect new versions of Tasmota."""
+
+        @property
         def lowest_tasmota_installed(self) -> version.Version:
             """Get the lowest Tasmota version from all Sonoffs."""
+            import requests
+
             lowest_version = None
             status_uri = 'cm?cmnd=Status%202'
             tasmota_version = None
@@ -158,8 +186,7 @@ class HomeAssistantAutomation(Automation):
                 try:
                     json = requests.get('http://{0}/{1}'.format(
                         host, status_uri)).json()
-                    tasmota_version = version.parse(
-                        json['StatusFWR']['Version'])
+                    tasmota_version = json['StatusFWR']['Version']
                 except KeyError:
                     self.hass.error(
                         'Malformed JSON from host {0}'.format(host))
@@ -179,19 +206,12 @@ class HomeAssistantAutomation(Automation):
 
         def initialize(self) -> None:
             """Initialize."""
+            super().initialize()
+
             self.hass.run_every(
                 self.update_tasmota_sensor,
                 self.hass.datetime(),
                 timedelta(minutes=5).total_seconds())
-
-            for app, sensors in self.entities['version_sensors'].items():
-                installed, available = sensors
-                self.hass.listen_state(
-                    self.version_change_detected,
-                    available,
-                    app=self.properties['apps'][app],
-                    installed=installed,
-                    constrain_input_boolean=self.constraint)
 
         def update_tasmota_sensor(self, kwargs: dict) -> None:
             """Update installed Tasmota version every so often."""
@@ -202,19 +222,3 @@ class HomeAssistantAutomation(Automation):
                     'friendly_name': 'Lowest Tasmota Installed',
                     'icon': 'mdi:wifi'
                 })
-
-        def version_change_detected(self, entity: Union[str, dict],
-                                    attribute: str, old: str, new: str,
-                                    kwargs: dict) -> None:
-            """Notify me when there's a new HASS version."""
-            installed = version.parse(self.hass.get_state(kwargs['installed']))
-            available = version.parse(new)
-
-            if available > installed:
-                self.hass.log('New {0} version detected: {1}'.format(
-                    kwargs['app'], available))
-
-                self.hass.notification_manager.send(
-                    'New {0}'.format(kwargs['app']),
-                    'Version detected: {0}'.format(available),
-                    target='Aaron')
