@@ -14,7 +14,7 @@ from lib.const import PEOPLE
 class PresenceAutomation(Automation):
     """Define a class to represent automations for presence."""
 
-    class BriefingWhenCome(Feature):
+    class BriefingWhenHome(Feature):
         """Define a feature to send a briefing when someone comes home."""
 
         def initialize(self) -> None:
