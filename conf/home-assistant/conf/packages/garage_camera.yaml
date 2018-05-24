@@ -13,6 +13,7 @@ camera:
 group:
   garage_camera:
     name: Garage Camera
+    control: hidden
     entities:
       - camera.garage_camera
       - binary_sensor.garage_camera_motion_detected
