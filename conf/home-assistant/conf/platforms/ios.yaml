@@ -20,14 +20,6 @@ push:
           title: Wait 5 Minutes
           activationMode: background
           authenticationRequired: false
-    - name: Car Near Home
-      identifier: car_near_home
-      actions:
-        - identifier: OPEN_UP
-          title: Open Up
-          activationMode: background
-          authenticationRequired: false
-          destructive: false
     - name: Security
       identifier: security
       actions:
