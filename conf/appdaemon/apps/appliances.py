@@ -95,7 +95,7 @@ class WasherDryerAutomation(Automation):
             """Deal with changes to the status."""
             if new == self.hass.manager_app.States.clean.value:
                 self.hass.notification_manager.repeat(
-                    'Dishwasher Clean',
+                    'Dishwasher Clean 🍽',
                     "Empty it now and you won't have to do it later!",
                     60 * 60,
                     when=self.hass.datetime() + timedelta(minutes=15),
@@ -324,8 +324,8 @@ class VacuumAutomation(Automation):
             """Listen for changes in bin status."""
             if new == self.hass.manager_app.BinStates.full.value:
                 self.hass.notification_manager.repeat(
-                    'Vacuum Full',
-                    "Empty it now and you won't have to do it later!",
+                    'Wolfie Full 🤖',
+                    "Empty him now and you won't have to do it later!",
                     60 * 60,
                     key=HANDLER_VACUUM_FULL,
                     target='home',

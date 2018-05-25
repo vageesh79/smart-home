@@ -33,17 +33,17 @@ class PlantAutomation(Automation):
                                   attribute: str, old: str, new: str,
                                   kwargs: dict) -> None:
             """Notify when the plant's moisture is low."""
-            key = HANDLER_PLANT_NEEDS_WATER.format(self.hass.friendly_name)
+            key = HANDLER_PLANT_NEEDS_WATER.format(
+                self.hass.friendly_name.lower())
             if (not (self.low_moisture)
                     and int(new) < int(self.properties['moisture_threshold'])):
                 self.hass.log(
                     'Notifying people at home that plant is low on moisture')
 
-                message = '{0} is at {1}% moisture and needs water.'.format(
-                    self.hass.friendly_name, self.current_moisture),
                 self.hass.notification_manager.repeat(
-                    '{0} is Dry'.format(self.hass.friendly_name),
-                    message,
+                    '{0} is Dry 💧'.format(self.hass.friendly_name),
+                    '{0} is at {1}% moisture and needs water.'.format(
+                        self.hass.friendly_name, self.current_moisture),
                     60 * 60,
                     key=key,
                     target='home')
