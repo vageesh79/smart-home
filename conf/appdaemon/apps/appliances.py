@@ -53,7 +53,7 @@ class WasherDryerAutomation(Automation):
             self.hass.listen_event(
                 self.response_from_push_notification,
                 'ios.notification_action_fired',
-                actionName='APPLIANCE_EMPTIED',
+                actionName=self.properties['ios_emptied_key'],
                 constrain_input_boolean=self.constraint)
             self.hass.listen_state(
                 self.power_changed,
@@ -102,7 +102,7 @@ class WasherDryerAutomation(Automation):
                     key=HANDLER_DISHWASHER_CLEAN,
                     target='home',
                     data={'push': {
-                        'category': 'appliances'
+                        'category': 'dishwasher'
                     }})
             elif new == self.hass.manager_app.States.dirty.value:
                 self.hass.notification_manager.cancel(HANDLER_DISHWASHER_CLEAN)
@@ -237,7 +237,7 @@ class VacuumAutomation(Automation):
             self.hass.listen_event(
                 self.response_from_push_notification,
                 'ios.notification_action_fired',
-                actionName='APPLIANCE_EMPTIED',
+                actionName=self.properties['ios_emptied_key'],
                 constrain_input_boolean=self.constraint)
             self.hass.listen_state(
                 self.all_done,
@@ -330,7 +330,7 @@ class VacuumAutomation(Automation):
                     key=HANDLER_VACUUM_FULL,
                     target='home',
                     data={'push': {
-                        'category': 'appliances'
+                        'category': 'wolfie'
                     }})
             elif new == self.hass.manager_app.BinStates.empty.value:
                 self.hass.notification_manager.cancel(HANDLER_VACUUM_FULL)

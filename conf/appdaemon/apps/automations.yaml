@@ -90,6 +90,7 @@ dishwasher_automation:
       properties:
         clean_threshold: 0.0
         drying_threshold: 3.0
+        ios_emptied_key: DISHWASHER_EMPTIED
         running_threshold: 10.0
       mode_alterations:
         do_not_disturb: disable
@@ -647,6 +648,7 @@ wolfie_automation:
         initial: true
     - name: scheduled_cycle
       properties:
+        ios_emptied_key: WOLFIE_EMPTIED
         schedule_switches:
           - input_boolean.vacuum_schedule_monday
           - input_boolean.vacuum_schedule_tuesday

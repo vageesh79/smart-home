@@ -1,10 +1,10 @@
 ---
 push:
   categories:
-    - name: Appliances
-      identifier: appliances
+    - name: Dishwasher
+      identifier: dishwasher
       actions:
-        - identifier: APPLIANCE_EMPTIED
+        - identifier: DISHWASHER_EMPTIED
           title: Empty
           activationMode: background
           authenticationRequired: false
@@ -34,5 +34,12 @@ push:
           authenticationRequired: false
         - identifier: IGNORE
           title: Ignore
+          activationMode: background
+          authenticationRequired: false
+    - name: Wolfie
+      identifier: wolfie
+      actions:
+        - identifier: WOLFIE_EMPTIED
+          title: Empty
           activationMode: background
           authenticationRequired: false

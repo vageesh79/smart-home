@@ -140,26 +140,6 @@ class NotificationManager(App):
         return self.now_is_between(notification.blackout_start_time,
                                    notification.blackout_end_time)
 
-    def _send(self, notification: Notification) -> None:
-        """Send an immediate single notification."""
-        if notification.target:
-            target = notification.target
-        else:
-            target = 'everyone'
-
-        for target in self._get_targets(target):
-            if notification.data:
-                self.call_service(
-                    'notify/{0}'.format(target),
-                    message=notification.message,
-                    title=notification.title,
-                    data=notification.data)
-            else:
-                self.call_service(
-                    'notify/{0}'.format(target),
-                    message=notification.message,
-                    title=notification.title)
-
     # --- CALLBACKS -----------------------------------------------------------
     def _notifier_test_cb(self, event_name: str, data: dict,
                           kwargs: dict) -> None:
@@ -209,7 +189,23 @@ class NotificationManager(App):
         """Send a single (immediate or scheduled) notification."""
         notification = kwargs['notification']
 
-        self._send(notification)
+        if notification.target:
+            target = notification.target
+        else:
+            target = 'everyone'
+
+        for target in self._get_targets(target):
+            if notification.data:
+                self.call_service(
+                    'notify/{0}'.format(target),
+                    message=notification.message,
+                    title=notification.title,
+                    data=notification.data)
+            else:
+                self.call_service(
+                    'notify/{0}'.format(target),
+                    message=notification.message,
+                    title=notification.title)
 
         if notification.kind == Notification.NotificationTypes.single:
             self.handler_registry.deregister(notification.key, cancel=False)
