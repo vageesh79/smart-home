@@ -45,8 +45,9 @@ class PlantAutomation(Automation):
                     '{0} is Dry'.format(self.hass.friendly_name),
                     message,
                     60 * 60,
-                    key=HANDLER_PLANT_NEEDS_WATER.format(key),
+                    key=key,
                     target='home')
+                self.low_moisture = True
             else:
                 self.low_moisture = False
                 self.hass.notification_manager.cancel(key)
