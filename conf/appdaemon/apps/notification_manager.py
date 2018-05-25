@@ -69,10 +69,10 @@ class NotificationManager(App):
 
     def _dispatch(self, notification: Notification) -> None:
         """Send a single (immediate or scheduled) notification."""
+        notification = self._blackout_reschedule(notification)
+
         if not notification.when:
             notification.when = self.datetime() + timedelta(seconds=1)
-
-        notification = self._blackout_reschedule(notification)
 
         if not notification.key:
             notification.key = uuid.uuid4()
@@ -194,21 +194,27 @@ class NotificationManager(App):
         else:
             target = 'everyone'
 
-        for target in self._get_targets(target):
-            if notification.data:
-                self.call_service(
-                    'notify/{0}'.format(target),
-                    message=notification.message,
-                    title=notification.title,
-                    data=notification.data)
-            else:
-                self.call_service(
-                    'notify/{0}'.format(target),
-                    message=notification.message,
-                    title=notification.title)
+        if self.now_is_between(notification.blackout_start_time,
+                               notification.blackout_end_time):
+            self.handler_registry.deregister(notification.key)
+            self._dispatch(notification)
+        else:
+            for target in self._get_targets(target):
+                if notification.data:
+                    self.call_service(
+                        'notify/{0}'.format(target),
+                        message=notification.message,
+                        title=notification.title,
+                        data=notification.data)
+                else:
+                    self.call_service(
+                        'notify/{0}'.format(target),
+                        message=notification.message,
+                        title=notification.title)
 
-        if notification.kind == Notification.NotificationTypes.single:
-            self.handler_registry.deregister(notification.key, cancel=False)
+            if notification.kind == Notification.NotificationTypes.single:
+                self.handler_registry.deregister(
+                    notification.key, cancel=False)
 
     # --- APP API -------------------------------------------------------------
     def cancel(self, key: str) -> None:
