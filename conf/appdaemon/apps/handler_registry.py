@@ -28,11 +28,10 @@ class HandlerRegistry(hass.Hass):
 
     # --- APP API -------------------------------------------------------------
     def deregister(self, *keys: str, cancel: bool = True) -> None:
-        """Deregister a notification"""
+        """Deregister a handler."""
         for key in keys:
             if key not in self._handles:
-                self.log('Cannot deregister unregistered notification: "{0}"'.
-                         format(key))
+                self.log('Can\'t remove missing handler: "{0}"'.format(key))
                 continue
 
             handles = self._handles[key]
@@ -45,7 +44,7 @@ class HandlerRegistry(hass.Hass):
             del self._handles[key]
 
     def deregister_all(self, cancel: bool = True) -> None:
-        """Deregister all notifications."""
+        """Deregister all handlers."""
         if cancel:
             for handle in self._handles.values():
                 self._cancel_timer(handle)
@@ -55,10 +54,10 @@ class HandlerRegistry(hass.Hass):
         self.log('All handlers deregistered: {0}'.format(self._handles))
 
     def register(self, key: str, *handles: uuid.UUID) -> None:
-        """Register a new notification."""
+        """Register a new handler."""
         if key in self._handles:
             self.log(
-                'Replacing existing notification: "{0}"'.format(key),
+                'Replacing existing handler: "{0}"'.format(key),
                 level='WARNING')
             for handle in handles:
                 self._cancel_timer(handle)
