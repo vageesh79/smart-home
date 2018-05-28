@@ -42,7 +42,7 @@ services:
     build:
       context: ./home-assistant
       args:
-        version: 0.69
+        version: 0.70.0
     command: /usr/src/app/start.sh
     container_name: hass
     devices:
