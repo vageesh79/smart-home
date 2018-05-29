@@ -194,8 +194,9 @@ class NotificationManager(App):
         else:
             target = 'everyone'
 
-        if self.now_is_between(notification.blackout_start_time,
-                               notification.blackout_end_time):
+        if (notification.blackout_start_time and notification.blackout_end_time
+                and self.now_is_between(notification.blackout_start_time,
+                                        notification.blackout_end_time)):
             self.handler_registry.deregister(notification.key)
             self._dispatch(notification)
         else:
