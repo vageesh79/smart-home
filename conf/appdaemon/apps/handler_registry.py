@@ -31,7 +31,9 @@ class HandlerRegistry(hass.Hass):
         """Deregister a handler."""
         for key in keys:
             if key not in self._handles:
-                self.log('Can\'t remove missing handler: "{0}"'.format(key))
+                self.log(
+                    'Can\'t remove missing handler: "{0}"'.format(key),
+                    level='DEBUG')
                 continue
 
             handles = self._handles[key]
