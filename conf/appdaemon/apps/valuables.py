@@ -23,7 +23,7 @@ class TileAutomation(Automation):
         def arrived_home(self, event_name: str, data: dict,
                          kwargs: dict) -> None:
             """Start a timer after the person has arrived."""
-            self.hass.run_in(self.check_for_tile, 60 * 5)
+            self.hass.run_in(self.check_for_tile, self.properties['duration'])
 
         def check_for_tile(self, kwargs: dict) -> None:
             """Notify the person if their Tile is missing."""

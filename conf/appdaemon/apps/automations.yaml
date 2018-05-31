@@ -14,6 +14,7 @@ aarons_keys_automation:
     - name: left_somewhere
       properties:
         target: Aaron
+        duration: 600
       constraint:
         name: Notify AMB keys missing
         icon: mdi:key
