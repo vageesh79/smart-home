@@ -348,8 +348,7 @@ class VacuumAutomation(Automation):
 
         def create_schedule(self) -> None:
             """Create the vacuuming schedule from the on booleans."""
-            if HANDLER_VACUUM_SCHEDULE in self.hass.handler_registry:
-                self.hass.handler_registry.deregister(HANDLER_VACUUM_SCHEDULE)
+            self.hass.handler_registry.deregister(HANDLER_VACUUM_SCHEDULE)
 
             self.hass.handler_registry.register(
                 HANDLER_VACUUM_SCHEDULE,
