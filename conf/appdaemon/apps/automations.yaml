@@ -13,8 +13,8 @@ aarons_keys_automation:
   features:
     - name: left_somewhere
       properties:
-        target: Aaron
         duration: 600
+        target: Aaron
       constraint:
         name: Notify AMB keys missing
         icon: mdi:key
@@ -33,6 +33,7 @@ aarons_wallet_automation:
   features:
     - name: left_somewhere
       properties:
+        duration: 600
         target: Aaron
       constraint:
         name: Notify AMB wallet missing
