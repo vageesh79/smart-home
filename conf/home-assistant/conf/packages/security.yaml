@@ -37,6 +37,8 @@ group:
     control: hidden
     entities:
       - sensor.secure_status
+      - input_boolean.security_automation_auto_departure_lockup
+      - input_boolean.security_automation_notify_on_change
       - scene.depart_home
       - scene.drive_home
       - scene.walk_home
@@ -45,7 +47,6 @@ group:
     name: Security System
     entities:
       - alarm_control_panel.simplisafe
-      - input_boolean.security_automation_notify_on_change
 
 scene:
   - name: Depart Home

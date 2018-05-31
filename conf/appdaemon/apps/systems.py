@@ -88,7 +88,8 @@ class SystemsAutomation(Automation):
             """Perform nightly tasks"""
             self.hass.log('Performing nightly tasks')
 
-            self.hass.turn_on('switch.pihole_enabled')
+            self.hass.turn_on(self.entities['auto_arm'])
+            self.hass.turn_on(self.entities['pihole'])
 
     class SslExpiration(Feature):
         """Define a feature to notify me when the SSL cert is expiring."""

@@ -582,10 +582,10 @@ systems_automation:
         initial: true
     - name: nightly_tasks
       entities:
-        pihole_enabled: switch.pihole_enabled
+        auto_arm: input_boolean.security_automation_auto_nighttime_lockup
+        pihole: switch.pihole_enabled
       properties:
-        restart_schedule_time: "00:15:00"
-        tasks_schedule_time: "00:00:00"
+        tasks_schedule_time: "01:00:00"
       constraint:
         name: Nightly tasks
         icon: mdi:clock
