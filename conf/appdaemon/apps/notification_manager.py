@@ -78,8 +78,10 @@ class NotificationManager(App):
 
         if not notification.key:
             notification.key = uuid.uuid4()
-            self.log('Using random handler registry key: {0}'.format(
-                notification.key))
+            self.log(
+                'Using random handler registry key: {0}'.format(
+                    notification.key),
+                level='DEBUG')
 
         if not notification.target:
             notification.target = 'everyone'
