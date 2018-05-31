@@ -13,7 +13,6 @@ OPENER_FILE_URL = 'https://hass.bachho.me/local/tts_opener.mp3'
 class TTS(App):
     """Define a class to represent the app."""
 
-    # --- INITIALIZERS --------------------------------------------------------
     def initialize(self) -> None:
         """Initialize."""
         super().initialize()

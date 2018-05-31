@@ -3,7 +3,7 @@
 # pylint: disable=too-many-arguments,unused-argument,
 # pylint: disable=attribute-defined-outside-init
 
-from typing import Union
+from typing import Tuple, Union
 
 from app import App
 from automation import Automation, Feature
@@ -24,11 +24,6 @@ class ClimateManager(App):
             self.get_state(self.entities['average_indoor_temperature']))
 
     @property
-    def outside_temp(self) -> float:
-        """Define a property to get the current outdoor temperature."""
-        return float(self.get_state(self.entities['outside_temp']))
-
-    @property
     def away_mode(self) -> bool:
         """Return the state of away mode."""
         return self.get_state(
@@ -40,6 +35,49 @@ class ClimateManager(App):
         self.call_service(
             'nest/set_mode',
             home_mode='away' if value in (1, True, 'on') else 'home')
+
+    @property
+    def indoor_temp(self) -> int:
+        """Return the temperature the thermostat is currently set to."""
+        return int(
+            self.get_state(
+                self.entities['thermostat'], attribute='current_temperature'))
+
+    @indoor_temp.setter
+    def indoor_temp(self, value: int) -> None:
+        """Set the thermostat temperature."""
+        self.call_service(
+            'climate/set_temperature',
+            entity_id=self.entities['thermostat'],
+            temperature=str(value))
+
+    @property
+    def outside_temp(self) -> float:
+        """Define a property to get the current outdoor temperature."""
+        return float(self.get_state(self.entities['outside_temp']))
+
+    def initialize(self) -> None:
+        """Initialize."""
+        self.register_endpoint(self._climate_bump_endpoint, 'climate_bump')
+
+    # --- ENDPOINTS -----------------------------------------------------------
+    def _climate_bump_endpoint(self, data: dict) -> Tuple[dict, int]:
+        """Define an endpoint to quickly bump the climate."""
+        if not data.get('amount'):
+            return {
+                'status': 'error',
+                'message': 'Missing "amount" parameter'
+            }, 502
+
+        # Anticipating that we'll get values like "5" and "-3" from the API
+        # call:
+        target_temp = self.indoor_temp + int(data['amount'])
+        self.indoor_temp = target_temp
+        return {
+            "status": "ok",
+            "message": 'Bumping temperature {0}° (to {1}°)'.format(
+                data['amount'], target_temp)
+        }, 200
 
 
 class ClimateAutomation(Automation):
