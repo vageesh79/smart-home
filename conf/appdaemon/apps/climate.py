@@ -58,6 +58,8 @@ class ClimateManager(App):
 
     def initialize(self) -> None:
         """Initialize."""
+        super().initialize()
+
         self.register_endpoint(self._climate_bump_endpoint, 'climate_bump')
 
     # --- ENDPOINTS -----------------------------------------------------------
