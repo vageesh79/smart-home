@@ -92,7 +92,7 @@ class SecurityAutomation(Automation):
                     self.hass.presence_manager.ProximityStates.home.value
                     and data['new'] !=
                     self.hass.presence_manager.ProximityStates.home.value):
-                self.hass.log('Making sure "Depart Home" scene is on')
+                self.hass.log('Everyone has left; locking up')
 
                 self.hass.turn_on('scene.depart_home')
 
