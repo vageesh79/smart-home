@@ -47,7 +47,7 @@ class NotificationManager(App):
         self.listen_event(self._notifier_test_cb, 'NOTIFIER_TEST')
 
     # --- HELPERS -------------------------------------------------------------
-    def _blackout_reschedule(self, notification: Notification) -> Notification:
+    def _adjust_for_blackout(self, notification: Notification) -> Notification:
         """Reschedule a notification's schedule for outside of blackout."""
         if self._in_blackout(notification):
             if notification.when:
@@ -57,46 +57,45 @@ class NotificationManager(App):
                 target_date = self.date()
                 active_time = self.time()
 
-            if active_time > self.parse_time(notification.blackout_start_time):
+            if not (active_time >= self.parse_time(
+                    notification.blackout_start_time) and active_time <=
+                    self.parse_time(notification.blackout_end_time)):
                 target_date = target_date + timedelta(days=1)
 
             notification.when = datetime.combine(
                 target_date, self.parse_time(notification.blackout_end_time))
 
             self.log('Rescheduling notification: {0}'.format(notification))
+        else:
+            notification.when = self.datetime() + timedelta(seconds=1)
 
         return notification
 
     def _dispatch(self, notification: Notification) -> None:
         """Send a single (immediate or scheduled) notification."""
-        notification = self._blackout_reschedule(notification)
-
-        if not notification.when:
-            notification.when = self.datetime() + timedelta(seconds=1)
+        notification = self._adjust_for_blackout(notification)
 
         if not notification.key:
             notification.key = uuid.uuid4()
             self.log('Using random handler registry key: {0}'.format(
                 notification.key))
 
-        # Scenario 1: Repeating notification
+        if not notification.target:
+            notification.target = 'everyone'
+
         if notification.kind == Notification.NotificationTypes.repeating:
             self.log('Repeating notification: {0}'.format(notification))
 
             handler = self.run_every(
-                self._send_single_cb,
+                self._send_cb,
                 notification.when,
                 notification.interval,
                 notification=notification)
-
-        # Scenario 2: Single notification
         else:
             self.log('Sending notification: {0}'.format(notification))
 
             handler = self.run_at(
-                self._send_single_cb,
-                notification.when,
-                notification=notification)
+                self._send_cb, notification.when, notification=notification)
 
         self.handler_registry.register(notification.key, handler)
 
@@ -185,43 +184,32 @@ class NotificationManager(App):
         else:
             self.handler_registry.deregister_all()
 
-    def _send_single_cb(self, kwargs: dict) -> None:
+    def _send_cb(self, kwargs: dict) -> None:
         """Send a single (immediate or scheduled) notification."""
         notification = kwargs['notification']
 
-        if notification.target:
-            target = notification.target
-        else:
-            target = 'everyone'
+        if notification.kind == Notification.NotificationTypes.repeating:
+            notification.when = None
+            if self._in_blackout(notification):
+                self.handler_registry.deregister(notification.key)
+                self._dispatch(notification)
+                return
 
-        if (notification.blackout_start_time and notification.blackout_end_time
-                and self.now_is_between(notification.blackout_start_time,
-                                        notification.blackout_end_time)):
-            self.handler_registry.deregister(notification.key)
-            self._dispatch(notification)
-        else:
-            for target in self._get_targets(target):
-                if notification.data:
-                    self.call_service(
-                        'notify/{0}'.format(target),
-                        message=notification.message,
-                        title=notification.title,
-                        data=notification.data)
-                else:
-                    self.call_service(
-                        'notify/{0}'.format(target),
-                        message=notification.message,
-                        title=notification.title)
+        for target in self._get_targets(notification.target):
+            payload = {
+                'message': notification.message,
+                'title': notification.title
+            }
 
-            if notification.kind == Notification.NotificationTypes.single:
-                self.handler_registry.deregister(
-                    notification.key, cancel=False)
+            if notification.data:
+                payload['data'] = notification.data
+
+            self.call_service('notify/{0}'.format(target), **payload)
+
+        if notification.kind == Notification.NotificationTypes.single:
+            self.handler_registry.deregister(notification.key, cancel=False)
 
     # --- APP API -------------------------------------------------------------
-    def cancel(self, key: str) -> None:
-        """Cancels a scheduled notification."""
-        self.handler_registry.deregister(key)
-
     def create_omnifocus_task(self, title: str) -> None:
         """Create a task in Aaron's omnifocus."""
         self.notify(

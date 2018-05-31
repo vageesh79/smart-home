@@ -50,4 +50,4 @@ class PlantAutomation(Automation):
                 self.low_moisture = True
             else:
                 self.low_moisture = False
-                self.hass.notification_manager.cancel(key)
+                self.hass.handler_registry.deregister(key)

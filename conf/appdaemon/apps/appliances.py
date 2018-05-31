@@ -105,7 +105,7 @@ class WasherDryerAutomation(Automation):
                         'category': 'dishwasher'
                     }})
             elif new == self.hass.manager_app.States.dirty.value:
-                self.hass.notification_manager.cancel(HANDLER_DISHWASHER_CLEAN)
+                self.hass.handler_registry.deregister(HANDLER_DISHWASHER_CLEAN)
 
         def response_from_push_notification(self, event_name: str, data: dict,
                                             kwargs: dict) -> None:
@@ -333,7 +333,7 @@ class VacuumAutomation(Automation):
                         'category': 'wolfie'
                     }})
             elif new == self.hass.manager_app.BinStates.empty.value:
-                self.hass.notification_manager.cancel(HANDLER_VACUUM_FULL)
+                self.hass.handler_registry.deregister(HANDLER_VACUUM_FULL)
 
         def create_schedule(self) -> None:
             """Create the vacuuming schedule from the on booleans."""
