@@ -10,7 +10,8 @@ from typing import Union
 from app import App
 from automation import Automation, Feature
 from lib.const import (
-    HANDLER_DISHWASHER_CLEAN, HANDLER_VACUUM_FULL, HANDLER_VACUUM_SCHEDULE)
+    HANDLER_DISHWASHER_CLEAN, HANDLER_VACUUM_FULL, HANDLER_VACUUM_SCHEDULE,
+    HANDLER_VACUUM_STUCK)
 
 
 class WasherDryer(App):
@@ -255,9 +256,19 @@ class VacuumAutomation(Automation):
                 new=self.hass.manager_app.States.charger_disconnected.value,
                 constrain_input_boolean=self.constraint)
             self.hass.listen_state(
+                self.error_cleared,
+                self.hass.manager_app.entities['status'],
+                old=self.hass.manager_app.States.charger_disconnected.value,
+                constrain_input_boolean=self.constraint)
+            self.hass.listen_state(
                 self.errored,
                 self.hass.manager_app.entities['status'],
                 new=self.hass.manager_app.States.error.value,
+                constrain_input_boolean=self.constraint)
+            self.hass.listen_state(
+                self.error_cleared,
+                self.hass.manager_app.entities['status'],
+                old=self.hass.manager_app.States.error.value,
                 constrain_input_boolean=self.constraint)
             for toggle in self.properties['schedule_switches']:
                 self.hass.listen_state(
@@ -348,12 +359,19 @@ class VacuumAutomation(Automation):
                     self.hass.parse_time(self.properties['schedule_time']),
                     constrain_input_boolean=self.constraint))
 
+        def error_cleared(self, entity: Union[str, dict], attribute: str,
+                          old: str, new: str, kwargs: dict) -> None:
+            """Clear the error when Wolfie is no longer stuck."""
+            self.hass.handler_registry.deregister(HANDLER_VACUUM_STUCK)
+
         def errored(self, entity: Union[str, dict], attribute: str, old: str,
                     new: str, kwargs: dict) -> None:
             """Brief when Wolfie's had an error."""
-            self.hass.notification_manager.send(
+            self.hass.notification_manager.repeat(
                 'Wolfie Stuck 😢',
                 "Help him get back on track or home.",
+                60 * 5,
+                key=HANDLER_VACUUM_STUCK,
                 target='home',
             )
 

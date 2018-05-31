@@ -9,6 +9,7 @@ HANDLER_SWITCH_VACATION_MODE = 'switch_vacation_mode_{0}'
 HANDLER_PLANT_NEEDS_WATER = 'plant_needs_water_{0}'
 HANDLER_VACUUM_FULL = 'vacuum_full'
 HANDLER_VACUUM_SCHEDULE = 'vacuum_schedule'
+HANDLER_VACUUM_STUCK = 'vacuum_stuck'
 
 PEOPLE = {
     'Aaron': {
