@@ -6,7 +6,6 @@
 from typing import Tuple
 
 from app import App
-from automation import Automation
 
 OPENER_FILE_URL = 'https://hass.bachho.me/local/tts_opener.mp3'
 
