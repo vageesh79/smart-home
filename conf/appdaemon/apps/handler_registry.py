@@ -53,7 +53,9 @@ class HandlerRegistry(hass.Hass):
 
         self._handles.clear()
 
-        self.log('All handlers deregistered: {0}'.format(self._handles))
+        self.log(
+            'All handlers deregistered: {0}'.format(self._handles),
+            level='DEBUG')
 
     def register(self, key: str, *handles: uuid.UUID) -> None:
         """Register a new handler."""
@@ -66,4 +68,4 @@ class HandlerRegistry(hass.Hass):
 
         self._handles[key] = handles
 
-        self.log('Handler added: {0}'.format(self._handles))
+        self.log('Handler added: {0}'.format(self._handles), level='DEBUG')

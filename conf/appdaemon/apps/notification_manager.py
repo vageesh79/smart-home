@@ -65,7 +65,8 @@ class NotificationManager(App):
             notification.when = datetime.combine(
                 target_date, self.parse_time(notification.blackout_end_time))
 
-            self.log('Rescheduling notification: {0}'.format(notification))
+            self.log('Rescheduling notification: {0}'.format(
+                notification.title))
         else:
             notification.when = self.datetime() + timedelta(seconds=1)
 
@@ -84,7 +85,7 @@ class NotificationManager(App):
             notification.target = 'everyone'
 
         if notification.kind == Notification.NotificationTypes.repeating:
-            self.log('Repeating notification: {0}'.format(notification))
+            self.log('Repeating notification: {0}'.format(notification.title))
 
             handler = self.run_every(
                 self._send_cb,
@@ -92,7 +93,7 @@ class NotificationManager(App):
                 notification.interval,
                 notification=notification)
         else:
-            self.log('Sending notification: {0}'.format(notification))
+            self.log('Sending notification: {0}'.format(notification.title))
 
             handler = self.run_at(
                 self._send_cb, notification.when, notification=notification)
