@@ -36,7 +36,8 @@ class Automation(Base):
             }, {
                 **self.properties,
                 **feature.get('properties', {})
-            }, feature.get('constraint', constraint))
+            }, feature.get('constraint', constraint),
+            feature.get('mode_alterations', {}))
 
             if not feature_obj.repeatable and feature_obj in features:
                 self.error(
@@ -59,7 +60,8 @@ class Feature(object):
                  name: str,
                  entities: dict = None,
                  properties: dict = None,
-                 constraint_config: dict = None) -> None:
+                 constraint_config: dict = None,
+                 mode_alterations: dict = None) -> None:
         """Initiliaze."""
         self.entities = entities
         self.hass = hass
@@ -75,6 +77,11 @@ class Feature(object):
                     hass.name, name)
         else:
             self.constraint = None
+            
+        if mode_alterations:
+          for mode, value in mode_alterations.items():
+            mode_app = getattr(self.hass, mode)
+            mode_app.register_constraint_alteration(self.constraint, value)
 
     def __eq__(self, other):
         """Define equality based on name."""
