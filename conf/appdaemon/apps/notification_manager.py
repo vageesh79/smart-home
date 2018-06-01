@@ -87,16 +87,12 @@ class NotificationManager(App):
             notification.target = 'everyone'
 
         if notification.kind == Notification.NotificationTypes.repeating:
-            self.log('Repeating notification: {0}'.format(notification.title))
-
             handler = self.run_every(
                 self._send_cb,
                 notification.when,
                 notification.interval,
                 notification=notification)
         else:
-            self.log('Sending notification: {0}'.format(notification.title))
-
             handler = self.run_at(
                 self._send_cb, notification.when, notification=notification)
 
@@ -197,6 +193,8 @@ class NotificationManager(App):
                 self.handler_registry.deregister(notification.key)
                 self._dispatch(notification)
                 return
+
+        self.log('Single notification: {0}'.format(notification.title))
 
         for target in self._get_targets(notification.target):
             payload = {
