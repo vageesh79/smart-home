@@ -6,9 +6,9 @@
 from typing import Union
 
 from automation import Automation, Feature
-from lib.const import (BLACKOUT_END, BLACKOUT_START,
-                       HANDLER_SWITCH_SLEEP_TIMER,
-                       HANDLER_SWITCH_VACATION_MODE)
+from lib.const import (
+    BLACKOUT_END, BLACKOUT_START, HANDLER_SWITCH_SLEEP_TIMER,
+    HANDLER_SWITCH_VACATION_MODE)
 
 
 class SwitchAutomation(Automation):
@@ -205,24 +205,24 @@ class SwitchAutomation(Automation):
         def initialize(self) -> None:
             """Initialize."""
             self.hass.listen_event(
-                self.vacation_mode_activated,
+                self.vacation_mode_toggled,
                 'MODE_CHANGE',
                 mode='vacation_mode')
 
-        def vacation_mode_activated(self, event_name: str, data: dict,
-                                    kwargs: dict) -> None:
-            """Respond to changes when a mode changes."""
+        def vacation_mode_toggled(self, event_name: str, data: dict,
+                                  kwargs: dict) -> None:
+            """Respond to changes when vacation mode gets toggled."""
             key = HANDLER_SWITCH_VACATION_MODE.format(self.hass.name)
 
             if data['state'] == 'on':
                 on_handler = self.hass.run_at_sunset(
                     self.toggle_on_schedule,
-                    state=data['state'],
+                    state='on',
                     random_start=-60 * 60 * 1,
                     random_end=60 * 30 * 1)
                 off_handler = self.hass.run_at_sunset(
                     self.toggle_on_schedule,
-                    state=data['state'],
+                    state='off',
                     random_start=60 * 60 * 2,
                     random_end=60 * 60 * 4)
                 self.hass.handler_registry.register(key, on_handler,
