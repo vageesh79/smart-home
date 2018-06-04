@@ -12,8 +12,6 @@ alexa:
       - input_boolean.living_room_lights_automation_vacation_mode
       - input_boolean.mode_guest_mode
       - input_boolean.mode_vacation_mode
-      - scene.good_night
-      - scene.watch_plex
       - switch.fireplace
       - switch.front_patio_light_switch
       - switch.kitchen_patio_light_switch
@@ -37,7 +35,6 @@ alexa:
       - climate
       - input_boolean
       - group
-      - scene
       - script
       - sensor
       - switch
