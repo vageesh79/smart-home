@@ -7,46 +7,40 @@ alexa:
       - group.master_bedroom_lights
       - group.office_lights
       - group.outdoor_lights
-      - input_boolean.guest_mode
-      - input_boolean.living_room_lights_turn_on_at_sunset
-      - input_boolean.living_room_lights_turn_on_when_cloudy
-      - input_boolean.living_room_lights_vacation_mode
-      - input_boolean.vacation_mode
+      - input_boolean.living_room_lights_automation_turn_on_at_sunset
+      - input_boolean.living_room_lights_automation_turn_on_when_cloudy
+      - input_boolean.living_room_lights_automation_vacation_mode
+      - input_boolean.mode_guest_mode
+      - input_boolean.mode_vacation_mode
       - scene.good_night
       - scene.watch_plex
+      - switch.fireplace
+      - switch.front_patio_light_switch
+      - switch.kitchen_patio_light_switch
       - switch.master_bathroom_fan_switch
       - switch.master_toilet_fan_switch
-    exclude_entities:
-      - media_player.house_audio
-      - media_player.living_room
-      - media_player.office_desk
-      - switch.appdaemon
-      - switch.dishwasher_switch
-      - switch.durmstrang_glances
-      - switch.gryffindor_glances
-      - switch.gryffindor_glances
-      - switch.gryffindor_nginx
-      - switch.hass
-      - switch.hufflepuff_glances
-      - switch.hufflepuff_glances
-      - switch.hufflepuff_nginx
-      - switch.mqtt_mosquitto
-      - switch.pihole
-      - switch.plantgateway
-      - switch.ravenclaw_glances
-      - switch.ravenclaw_glances
-      - switch.slytherin_glances
-      - switch.ps4
-      - switch.ravenclaw_hass_elder_bachs
+      - switch.media_center
+      - switch.pihole_enabled
+      - switch.program_evening
+      - switch.program_morning
       - switch.reading_lamp
       - switch.sofa_lamp
+      - switch.wolfie_cycle
+      - switch.zone_flower_box
+      - switch.zone_landscaping
+    exclude_entities:
+      - media_player.house_audio
+      - media_player.sonos_playbar
+      - media_player.sonos_office_desk
     exclude_domains:
+      - automation
       - climate
       - input_boolean
       - group
       - scene
       - script
       - sensor
+      - switch
   entity_config:
     group.all_salt_lamps:
       display_categories: LIGHT
@@ -76,5 +70,13 @@ alexa:
       display_categories: LIGHT
     switch.pihole_enabled:
       name: 'Pi-hole'
+    switch.program_evening:
+      name: 'Evening Program'
+    switch.program_morning:
+      name: 'Morning Program'
     switch.wolfie_cycle:
       name: 'Wolfie'
+    switch.zone_flower_box:
+      name: 'Flower Box'
+    switch.zone_landscaping:
+      name: 'Landscaping'
