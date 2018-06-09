@@ -6,9 +6,9 @@
 from typing import Union
 
 from automation import Automation, Feature
-from lib.const import (
-    BLACKOUT_END, BLACKOUT_START, HANDLER_SWITCH_SLEEP_TIMER,
-    HANDLER_SWITCH_VACATION_MODE)
+from lib.const import (BLACKOUT_END, BLACKOUT_START,
+                       HANDLER_SWITCH_SLEEP_TIMER,
+                       HANDLER_SWITCH_VACATION_MODE)
 
 
 class SwitchAutomation(Automation):
@@ -121,7 +121,9 @@ class SwitchAutomation(Automation):
         def initialize(self) -> None:
             """Initialize."""
             if self.properties['schedule_time'] in ['sunrise', 'sunset']:
-                self.hass.run_at_sunset(
+                method = getattr(self.hass, 'run_at_{0}'.format(
+                    self.properties['schedule_time']))
+                method(
                     self.toggle_on_schedule,
                     state=self.properties['state'],
                     offset=self.properties.get('seasonal_offset', False),
