@@ -65,8 +65,8 @@ class NotificationManager(App):
             notification.when = datetime.combine(
                 target_date, self.parse_time(notification.blackout_end_time))
 
-            self.log('Rescheduling notification: {0}'.format(
-                notification.title))
+            self.log(
+                'Rescheduling notification: {0}'.format(notification.title))
         else:
             notification.when = self.datetime() + timedelta(seconds=1)
 
@@ -135,12 +135,12 @@ class NotificationManager(App):
                 notification.when, notification.blackout_start_time,
                 notification.blackout_end_time)
 
-        return self.now_is_between(notification.blackout_start_time,
-                                   notification.blackout_end_time)
+        return self.now_is_between(
+            notification.blackout_start_time, notification.blackout_end_time)
 
     # --- CALLBACKS -----------------------------------------------------------
-    def _notifier_test_cb(self, event_name: str, data: dict,
-                          kwargs: dict) -> None:
+    def _notifier_test_cb(
+            self, event_name: str, data: dict, kwargs: dict) -> None:
         """Run a test."""
         try:
             kind = data['kind']
@@ -152,8 +152,8 @@ class NotificationManager(App):
 
         _data = data.get('data', None)
         blackout_end_time = data.get('blackout_end_time', const.BLACKOUT_END)
-        blackout_start_time = data.get('blackout_start_time',
-                                       const.BLACKOUT_START)
+        blackout_start_time = data.get(
+            'blackout_start_time', const.BLACKOUT_START)
         interval = data.get('interval', None)
         key = data.get('key', None)
         target = data.get('target', None)
@@ -236,16 +236,17 @@ class NotificationManager(App):
 
         return target
 
-    def repeat(self,
-               title: str,
-               message: str,
-               interval: int,
-               when: Union[datetime, None] = None,
-               key: Union[str, None] = None,
-               target: Union[str, None] = None,
-               data: Union[dict, None] = None,
-               blackout_start_time: str = const.BLACKOUT_START,
-               blackout_end_time: str = const.BLACKOUT_END) -> None:
+    def repeat(
+            self,
+            title: str,
+            message: str,
+            interval: int,
+            when: Union[datetime, None] = None,
+            key: Union[str, None] = None,
+            target: Union[str, None] = None,
+            data: Union[dict, None] = None,
+            blackout_start_time: str = const.BLACKOUT_START,
+            blackout_end_time: str = const.BLACKOUT_END) -> None:
         """Send a repeating notification to one or more targets."""
         self._dispatch(
             Notification(
@@ -260,15 +261,16 @@ class NotificationManager(App):
                 target=target,
                 when=when))
 
-    def send(self,
-             title: str,
-             message: str,
-             when: Union[datetime, None] = None,
-             key: Union[str, None] = None,
-             target: Union[str, None] = None,
-             data: Union[dict, None] = None,
-             blackout_start_time: str = const.BLACKOUT_START,
-             blackout_end_time: str = const.BLACKOUT_END) -> None:
+    def send(
+            self,
+            title: str,
+            message: str,
+            when: Union[datetime, None] = None,
+            key: Union[str, None] = None,
+            target: Union[str, None] = None,
+            data: Union[dict, None] = None,
+            blackout_start_time: str = const.BLACKOUT_START,
+            blackout_end_time: str = const.BLACKOUT_END) -> None:
         """Send a notification to one or more targets."""
         self._dispatch(
             Notification(

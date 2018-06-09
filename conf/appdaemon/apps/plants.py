@@ -29,9 +29,9 @@ class PlantAutomation(Automation):
                 self.entities['current_moisture'],
                 constrain_input_boolean=self.constraint)
 
-        def low_moisture_detected(self, entity: Union[str, dict],
-                                  attribute: str, old: str, new: str,
-                                  kwargs: dict) -> None:
+        def low_moisture_detected(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Notify when the plant's moisture is low."""
             key = HANDLER_PLANT_NEEDS_WATER.format(
                 self.hass.friendly_name.lower())

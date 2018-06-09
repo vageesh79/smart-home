@@ -27,11 +27,11 @@ class Alexa(App):
         super().initialize()
 
         self.appliance_state_info = {
-            'The Dishwasher': (self.dishwasher, 'state',
-                               self.dishwasher.States.dirty),
+            'The Dishwasher': (
+                self.dishwasher, 'state', self.dishwasher.States.dirty),
             'Wolfie': (self.wolfie, 'bin_state', self.wolfie.BinStates.empty),
-            'The Vacuum': (self.wolfie, 'bin_state',
-                           self.wolfie.BinStates.empty)
+            'The Vacuum': (
+                self.wolfie, 'bin_state', self.wolfie.BinStates.empty)
         }
 
         self.register_endpoint(self._alexa_endpoint, 'alexa')
@@ -45,10 +45,10 @@ class Alexa(App):
         if intent is None:
             response = {
                 'status':
-                'error',
+                    'error',
                 'message':
-                'Alexa error encountered: {}'.format(
-                    self.get_alexa_error(data))
+                    'Alexa error encountered: {}'.format(
+                        self.get_alexa_error(data))
             }
             self.log(response)
             return response, 502
@@ -167,8 +167,9 @@ class Alexa(App):
                 if miles > 0:
                     speech = (
                         '{0} is {1} mile{2} and {3} minute{4} away from home.'
-                    ).format(name, miles, '' if miles == 1 else 's', time, ''
-                             if time == 1 else 's')
+                    ).format(
+                        name, miles, '' if miles == 1 else 's', time, ''
+                        if time == 1 else 's')
                 else:
                     speech = '{0} is less than a mile from home.'.format(name)
         else:

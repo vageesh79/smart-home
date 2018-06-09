@@ -62,8 +62,9 @@ class BriefingManager(App):
     # --- HELPERS -------------------------------------------------------------
     def __contains__(self, key: str) -> bool:
         """Determine if a key exists in registry."""
-        return (self._onetime_briefings.__contains__(key)
-                or self._recurring_briefings.__contains__(key))
+        return (
+            self._onetime_briefings.__contains__(key)
+            or self._recurring_briefings.__contains__(key))
 
     # --- APP API -------------------------------------------------------------
     def clear_briefings(self, include_recurring: bool = True) -> None:

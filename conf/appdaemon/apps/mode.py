@@ -39,8 +39,8 @@ class Mode(hass.Hass):
         self.listen_state(self.switch_toggled_cb, entity=self.switch)
 
     # --- APP API -------------------------------------------------------------
-    def register_constraint_alteration(self, constraint_name: str,
-                                       value: str) -> None:
+    def register_constraint_alteration(
+            self, constraint_name: str, value: str) -> None:
         """Record how a constraint switch should respond when in this mode."""
         location = getattr(self, '_constraints_to_{0}'.format(value))
         if constraint_name in location:
@@ -51,8 +51,9 @@ class Mode(hass.Hass):
 
         location.append(constraint_name)
 
-    def switch_toggled_cb(self, entity: Union[str, dict], attribute: str,
-                          old: str, new: str, kwargs: dict) -> None:
+    def switch_toggled_cb(
+            self, entity: Union[str, dict], attribute: str, old: str, new: str,
+            kwargs: dict) -> None:
         """Make alterations when a mode constraint is toggled."""
         self.fire_event('MODE_CHANGE', mode=self.name, state=new)
 

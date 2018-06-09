@@ -25,9 +25,9 @@ class SystemsAutomation(Automation):
                     attribute='all',
                     constrain_input_boolean=self.constraint)
 
-        def low_battery_detected(self, entity: Union[str, dict],
-                                 attribute: str, old: str, new: dict,
-                                 kwargs: dict) -> None:
+        def low_battery_detected(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: dict, kwargs: dict) -> None:
             """Creates OmniFocus todos whenever there's a low battery."""
             name = new['attributes']['friendly_name']
 
@@ -62,8 +62,9 @@ class SystemsAutomation(Automation):
                 duration=self.properties['seconds'],
                 constrain_input_boolean=self.constraint)
 
-        def limit_reached(self, entity: Union[str, dict], attribute: str,
-                          old: str, new: str, kwargs: dict) -> None:
+        def limit_reached(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Notify when the threshold is reached."""
             self.hass.notification_manager.send(
                 'Entity Checkup',
@@ -101,9 +102,9 @@ class SystemsAutomation(Automation):
                 self.entities['ssl_expiry'],
                 constrain_input_boolean=self.constraint)
 
-        def ssl_expiration_approaching(self, entity: Union[str, dict],
-                                       attribute: str, old: str, new: str,
-                                       kwargs: dict) -> None:
+        def ssl_expiration_approaching(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """When SSL is about to expire, make an OmniFocus todo."""
             if int(new) < self.properties['expiry_threshold']:
                 self.hass.log(

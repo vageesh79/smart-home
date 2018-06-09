@@ -20,8 +20,8 @@ class TileAutomation(Automation):
                 new=self.hass.presence_manager.HomeStates.home.value,
                 constrain_input_boolean=self.constraint)
 
-        def arrived_home(self, event_name: str, data: dict,
-                         kwargs: dict) -> None:
+        def arrived_home(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Start a timer after the person has arrived."""
             self.hass.run_in(self.check_for_tile, self.properties['duration'])
 

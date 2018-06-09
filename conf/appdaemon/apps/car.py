@@ -65,8 +65,9 @@ class CarAutomation(Automation):
                 attribute='fuel_level',
                 constrain_input_boolean=self.constraint)
 
-        def low_fuel_found(self, entity: Union[str, dict], attribute: str,
-                           old: str, new: str, kwargs: dict) -> None:
+        def low_fuel_found(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Creates OmniFocus todos whenever my car is low on gas."""
             name = self.hass.get_state(
                 self.entities['car'], attribute='friendly_name')

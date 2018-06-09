@@ -37,10 +37,9 @@ class Utilities(App):
         """Return a grammatically correct list join."""
         return ', '.join(the_list[:-2] + [' and '.join(the_list[-2:])])
 
-    def relative_search_dict(self,
-                             the_dict: dict,
-                             search: str,
-                             threshold: float = 0.3) -> Tuple[str, str]:
+    def relative_search_dict(
+            self, the_dict: dict, search: str,
+            threshold: float = 0.3) -> Tuple[str, str]:
         """Return a key/value pair (or its closest neighbor) from a dict."""
         _search = search.lower()
         try:
@@ -63,10 +62,9 @@ class Utilities(App):
 
         return match
 
-    def relative_search_list(self,
-                             the_list: list,
-                             search: str,
-                             threshold: float = 0.3) -> Tuple[str, str]:
+    def relative_search_list(
+            self, the_list: list, search: str,
+            threshold: float = 0.3) -> Tuple[str, str]:
         """Return an item (or its closest neighbor) from a list."""
         _search = search.lower()
         try:
@@ -101,8 +99,9 @@ class Utilities(App):
 
         return greeting
 
-    def run_on_days(self, callback: Callable[..., None], day_list: list,
-                    start: datetime.time, **kwargs: dict) -> list:
+    def run_on_days(
+            self, callback: Callable[..., None], day_list: list,
+            start: datetime.time, **kwargs: dict) -> list:
         """Run a callback on certain days (at the specified time)."""
         handle = []
         upcoming_days = []
@@ -126,18 +125,20 @@ class Utilities(App):
 
         return handle
 
-    def run_on_weekdays(self, callback: Callable[..., None],
-                        start: datetime.time, **kwargs: dict) -> list:
+    def run_on_weekdays(
+            self, callback: Callable[..., None], start: datetime.time,
+            **kwargs: dict) -> list:
         """Run a callback on weekdays (at the specified time)."""
         return self.run_on_days(
             callback, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
             start, **kwargs)
 
-    def run_on_weekend_days(self, callback: Callable[..., None],
-                            start: datetime.time, **kwargs: dict) -> list:
+    def run_on_weekend_days(
+            self, callback: Callable[..., None], start: datetime.time,
+            **kwargs: dict) -> list:
         """Run a callback on weekend days (at the specified time)."""
-        return self.run_on_days(callback, ['Saturday', 'Sunday'], start,
-                                **kwargs)
+        return self.run_on_days(
+            callback, ['Saturday', 'Sunday'], start, **kwargs)
 
     def slugify(self, text: str) -> str:
         """Slugify a given text."""
@@ -164,8 +165,9 @@ class Utilities(App):
             '{TH}',
             str(input_dt.day) + day_endings.get(input_dt.day, 'th'))
 
-    def time_is_between(self, target_dt: datetime.datetime, start_time: str,
-                        end_time: str) -> bool:
+    def time_is_between(
+            self, target_dt: datetime.datetime, start_time: str,
+            end_time: str) -> bool:
         """Generalization of AppDaemon's now_is_between method."""
         start_time = self.parse_time(start_time)
         end_time = self.parse_time(end_time)

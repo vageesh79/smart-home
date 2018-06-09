@@ -79,8 +79,8 @@ class HomeAssistantAutomation(Automation):
                 action='off',
                 constrain_input_boolean=self.constraint)
 
-        def presence_changed(self, event_name: str, data: dict,
-                             kwargs: dict) -> None:
+        def presence_changed(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Alter Vacation Mode based on presence."""
             if (kwargs['action'] == 'on'
                     and self.hass.vacation_mode.state == 'off'):
@@ -103,8 +103,9 @@ class HomeAssistantAutomation(Automation):
                 self.entities['notification'],
                 constrain_input_boolean=self.constraint)
 
-        def bad_login_detected(self, entity: Union[str, dict], attribute: str,
-                               old: str, new: str, kwargs: dict) -> None:
+        def bad_login_detected(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Send a notification when there's a bad login attempt."""
             self.hass.log('Registering a hack attempt: {0}'.format(new))
 
@@ -135,8 +136,8 @@ class HomeAssistantAutomation(Automation):
 
         def boundary_reached(self, kwargs: dict) -> None:
             """Set the blackout sensor appropriately based on time."""
-            self.hass.log('Setting blackout sensor: {0}'.format(
-                kwargs['state']))
+            self.hass.log(
+                'Setting blackout sensor: {0}'.format(kwargs['state']))
 
             if kwargs['state'] == 'on':
                 self.hass.turn_on(self.entities['blackout_switch'])
@@ -158,12 +159,13 @@ class HomeAssistantAutomation(Automation):
                 self.entities['available'],
                 constrain_input_boolean=self.constraint)
 
-        def version_change_detected(self, entity: Union[str, dict],
-                                    attribute: str, old: str, new: str,
-                                    kwargs: dict) -> None:
+        def version_change_detected(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Notify me when there's a new app version."""
-            self.hass.log('New {0} version detected: {1}'.format(
-                self.properties['app_name'], new))
+            self.hass.log(
+                'New {0} version detected: {1}'.format(
+                    self.properties['app_name'], new))
 
             self.hass.notification_manager.send(
                 'New {0}'.format(self.properties['app_name']),
@@ -184,8 +186,8 @@ class HomeAssistantAutomation(Automation):
 
             for host in self.properties['tasmota_hosts']:
                 try:
-                    json = requests.get('http://{0}/{1}'.format(
-                        host, status_uri)).json()
+                    json = requests.get(
+                        'http://{0}/{1}'.format(host, status_uri)).json()
                     tasmota_version = json['StatusFWR']['Version']
                 except KeyError:
                     self.hass.error(

@@ -63,11 +63,13 @@ class PresenceManager(App):
         for person, attrs in PEOPLE.items():
             # Set initial presence (so a restart can unstick it):
             if self.get_state(attrs['device_tracker']) == 'home':
-                self._set_input_select(attrs['presence_manager_input_select'],
-                                       self.HomeStates.home)
+                self._set_input_select(
+                    attrs['presence_manager_input_select'],
+                    self.HomeStates.home)
             else:
-                self._set_input_select(attrs['presence_manager_input_select'],
-                                       self.HomeStates.away)
+                self._set_input_select(
+                    attrs['presence_manager_input_select'],
+                    self.HomeStates.away)
 
             # Fire events when presence changes:
             self.listen_state(
@@ -130,8 +132,9 @@ class PresenceManager(App):
                 target_state=self.HomeStates.extended_away)
 
     # --- CALLBACKS -----------------------------------------------------------
-    def _change_input_select_cb(self, entity: Union[str, dict], attribute: str,
-                                old: str, new: str, kwargs: dict) -> None:
+    def _change_input_select_cb(
+            self, entity: Union[str, dict], attribute: str, old: str, new: str,
+            kwargs: dict) -> None:
         """Change state of a home presence input select."""
         input_select = kwargs['input_select']
         target_state = kwargs['target_state']
@@ -147,8 +150,9 @@ class PresenceManager(App):
 
         self._set_input_select(input_select, target_state)
 
-    def _presence_change_cb(self, entity: Union[str, dict], attribute: str,
-                            old: str, new: str, kwargs: dict) -> None:
+    def _presence_change_cb(
+            self, entity: Union[str, dict], attribute: str, old: str, new: str,
+            kwargs: dict) -> None:
         """Fire an event when a device tracker changes state."""
         if old == new:
             return
@@ -171,8 +175,9 @@ class PresenceManager(App):
         self.fire_event(
             'PRESENCE_CHANGE', person=person, old=old, new=new, first=first)
 
-    def _proximity_change_cb(self, entity: Union[str, dict], attribute: str,
-                             old: dict, new: dict, kwargs: dict) -> None:
+    def _proximity_change_cb(
+            self, entity: Union[str, dict], attribute: str, old: dict,
+            new: dict, kwargs: dict) -> None:
         """Lock up when we leave home."""
         if old['state'] == 'not set' or new['state'] == 'not set':
             return
@@ -258,9 +263,9 @@ class PresenceManager(App):
     def whos_away(self, include_others: bool = True) -> list:
         """Return a list of notifiers who are away."""
         if include_others:
-            return self._whos_relative_to_home(self.HomeStates.away,
-                                               self.HomeStates.extended_away,
-                                               self.HomeStates.just_left)
+            return self._whos_relative_to_home(
+                self.HomeStates.away, self.HomeStates.extended_away,
+                self.HomeStates.just_left)
 
         return self._whos_relative_to_home(self.HomeStates.away)
 
@@ -271,8 +276,8 @@ class PresenceManager(App):
     def whos_home(self, include_others: bool = True) -> list:
         """Return a list of notifiers who are at home."""
         if include_others:
-            return self._whos_relative_to_home(self.HomeStates.home,
-                                               self.HomeStates.just_arrived)
+            return self._whos_relative_to_home(
+                self.HomeStates.home, self.HomeStates.just_arrived)
 
         return self._whos_relative_to_home(self.HomeStates.home)
 

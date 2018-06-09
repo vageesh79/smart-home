@@ -6,9 +6,9 @@
 from typing import Union
 
 from automation import Automation, Feature
-from lib.const import (BLACKOUT_END, BLACKOUT_START,
-                       HANDLER_SWITCH_SLEEP_TIMER,
-                       HANDLER_SWITCH_VACATION_MODE)
+from lib.const import (
+    BLACKOUT_END, BLACKOUT_START, HANDLER_SWITCH_SLEEP_TIMER,
+    HANDLER_SWITCH_VACATION_MODE)
 
 
 class SwitchAutomation(Automation):
@@ -29,12 +29,12 @@ class SwitchAutomation(Automation):
         def toggle(self, state: str) -> None:
             """Toggle the switch state."""
             if self.state == 'off' and state == 'on':
-                self.hass.log('Turning on: {0}'.format(
-                    self.entities['switch']))
+                self.hass.log(
+                    'Turning on: {0}'.format(self.entities['switch']))
                 self.hass.turn_on(self.entities['switch'])
             elif self.state == 'on' and state == 'off':
-                self.hass.log('Turning off: {0}'.format(
-                    self.entities['switch']))
+                self.hass.log(
+                    'Turning off: {0}'.format(self.entities['switch']))
                 self.hass.turn_off(self.entities['switch'])
 
         def toggle_on_schedule(self, kwargs: dict) -> None:
@@ -53,8 +53,9 @@ class SwitchAutomation(Automation):
                 constrain_noone='just_arrived,home',
                 constrain_input_boolean=self.constraint)
 
-        def switch_activated(self, entity: Union[str, dict], attribute: str,
-                             old: str, new: str, kwargs: dict) -> None:
+        def switch_activated(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Turn the switch off if no one is home."""
             self.hass.log('No one home; not allowing switch to activate')
             self.toggle('off')
@@ -74,16 +75,18 @@ class SwitchAutomation(Automation):
                 new='off',
                 constrain_input_boolean=self.constraint)
 
-        def switch_turned_off(self, entity: Union[str, dict], attribute: str,
-                              old: str, new: str, kwargs: dict) -> None:
+        def switch_turned_off(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Reset the sleep timer when the switch turns off."""
             self.hass.call_service(
                 'input_number/set_value',
                 entity_id=self.entities['timer_slider'],
                 value=0)
 
-        def timer_changed(self, entity: Union[str, dict], attribute: str,
-                          old: str, new: str, kwargs: dict) -> None:
+        def timer_changed(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Start/stop a sleep timer for this switch."""
             key = HANDLER_SWITCH_SLEEP_TIMER.format(self.hass.name)
             minutes = int(float(new))
@@ -121,8 +124,9 @@ class SwitchAutomation(Automation):
         def initialize(self) -> None:
             """Initialize."""
             if self.properties['schedule_time'] in ['sunrise', 'sunset']:
-                method = getattr(self.hass, 'run_at_{0}'.format(
-                    self.properties['schedule_time']))
+                method = getattr(
+                    self.hass, 'run_at_{0}'.format(
+                        self.properties['schedule_time']))
                 method(
                     self.toggle_on_schedule,
                     state=self.properties['state'],
@@ -150,8 +154,8 @@ class SwitchAutomation(Automation):
                 constrain_input_boolean=self.constraint,
                 constrain_sun='down')
 
-        def someone_arrived(self, event_name: str, data: dict,
-                            kwargs: dict) -> None:
+        def someone_arrived(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Turn on after dark when someone comes homes."""
             self.hass.log(
                 'Someone came home after dark; turning on the switch')
@@ -179,9 +183,9 @@ class SwitchAutomation(Automation):
                 constrain_anyone='just_arrived,home'
                 if self.properties.get('presence_required') else None)
 
-        def cloud_coverage_reached(self, entity: Union[str, dict],
-                                   attribute: str, old: str, new: str,
-                                   kwargs: dict) -> None:
+        def cloud_coverage_reached(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Turn on the switch when a "cloudy event" occurs."""
             try:
                 cloud_cover = float(new)
@@ -211,8 +215,8 @@ class SwitchAutomation(Automation):
                 'MODE_CHANGE',
                 mode='vacation_mode')
 
-        def vacation_mode_toggled(self, event_name: str, data: dict,
-                                  kwargs: dict) -> None:
+        def vacation_mode_toggled(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Respond to changes when vacation mode gets toggled."""
             key = HANDLER_SWITCH_VACATION_MODE.format(self.hass.name)
 
@@ -227,7 +231,7 @@ class SwitchAutomation(Automation):
                     state='off',
                     random_start=60 * 60 * 2,
                     random_end=60 * 60 * 4)
-                self.hass.handler_registry.register(key, on_handler,
-                                                    off_handler)
+                self.hass.handler_registry.register(
+                    key, on_handler, off_handler)
             else:
                 self.hass.handler_registry.deregister(key)

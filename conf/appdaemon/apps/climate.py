@@ -76,9 +76,11 @@ class ClimateManager(App):
         target_temp = self.indoor_temp + int(data['amount'])
         self.indoor_temp = target_temp
         return {
-            "status": "ok",
-            "message": 'Bumping temperature {0}° (to {1}°)'.format(
-                data['amount'], target_temp)
+            "status":
+                "ok",
+            "message":
+                'Bumping temperature {0}° (to {1}°)'.format(
+                    data['amount'], target_temp)
         }, 200
 
 
@@ -101,8 +103,8 @@ class ClimateAutomation(Automation):
                 'PROXIMITY_CHANGE',
                 constrain_input_boolean=self.constraint)
 
-        def proximity_changed(self, event_name: str, data: dict,
-                              kwargs: dict) -> None:
+        def proximity_changed(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Respond to "PROXIMITY_CHANGE" events."""
             if (self.hass.climate_manager.outside_temp <
                     self.properties['outside_threshold_low']
@@ -143,8 +145,8 @@ class ClimateAutomation(Automation):
                     self.hass.log('Setting thermostat to "Home"')
                     self.hass.climate_manager.away_mode = False
 
-        def arrived_home(self, event_name: str, data: dict,
-                         kwargs: dict) -> None:
+        def arrived_home(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Last ditch: turn the thermostat to home when someone arrives."""
             if self.hass.climate_manager.away_mode:
                 self.hass.log(
@@ -169,8 +171,9 @@ class ClimateAutomation(Automation):
                 new='cooling',
                 constrain_input_boolean=self.constraint)
 
-        def bad_aqi_detected(self, entity: Union[str, dict], attribute: str,
-                             old: str, new: str, kwargs: dict) -> None:
+        def bad_aqi_detected(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Send select notifications when cooling and poor AQI."""
             if (not self.notification_sent
                     and self.current_aqi > self.properties['aqi_threshold']):

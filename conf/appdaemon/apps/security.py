@@ -39,8 +39,9 @@ class SecurityAutomation(Automation):
                 constrain_input_boolean=self.constraint,
                 constrain_noone='just_arrived,home')
 
-        def house_insecure(self, entity: Union[str, dict], attribute: str,
-                           old: str, new: str, kwargs: dict) -> None:
+        def house_insecure(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Send notifications when the house has been left insecure."""
             self.hass.log('No one home and house is insecure; notifying')
 
@@ -53,8 +54,8 @@ class SecurityAutomation(Automation):
                     'category': 'security'
                 }})
 
-        def response_from_push_notification(self, event_name: str, data: dict,
-                                            kwargs: dict) -> None:
+        def response_from_push_notification(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Respond to 'ios.notification_action_fired' events."""
             target = self.hass.notification_manager.get_target_from_push_id(
                 data['sourceDevicePermanentID'])
@@ -85,8 +86,8 @@ class SecurityAutomation(Automation):
                 'PROXIMITY_CHANGE',
                 constrain_input_boolean=self.constraint)
 
-        def everyone_gone(self, event_name: str, data: dict,
-                          kwargs: dict) -> None:
+        def everyone_gone(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Respond to 'PROXIMITY_CHANGE' events."""
             if (not self.hass.security_system.secure and data['old'] ==
                     self.hass.presence_manager.ProximityStates.home.value
@@ -121,8 +122,9 @@ class SecurityAutomation(Automation):
                 self.hass.call_service(
                     'scene/turn_on', entity_id='scene.good_night')
 
-        def in_bed(self, entity: Union[str, dict], attribute: str, old: str,
-                   new: str, kwargs: dict) -> None:
+        def in_bed(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Lock up the house when we're in bed (if needed)."""
             self.activate()
 
@@ -147,8 +149,9 @@ class SecurityAutomation(Automation):
                 duration=60 * int(self.properties['time_left_open']),
                 constrain_input_boolean=self.constraint)
 
-        def left_open(self, entity: Union[str, dict], attribute: str, old: str,
-                      new: str, kwargs: dict) -> None:
+        def left_open(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Send notifications when the garage has been left open."""
             self.hass.notification_manager.send(
                 'Garage Open',
@@ -159,8 +162,8 @@ class SecurityAutomation(Automation):
                     'category': 'garage'
                 }})
 
-        def response_from_push_notification(self, event_name: str, data: dict,
-                                            kwargs: dict) -> None:
+        def response_from_push_notification(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Respond to 'ios.notification_action_fired' events."""
             target = self.hass.notification_manager.get_target_from_push_id(
                 data['sourceDevicePermanentID'])
@@ -185,8 +188,9 @@ class SecurityAutomation(Automation):
                 self.entities['state'],
                 constrain_input_boolean=self.constraint)
 
-        def state_changed(self, entity: Union[str, dict], attribute: str,
-                          old: str, new: str, kwargs: dict) -> None:
+        def state_changed(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Send a notification when the security state changes."""
             self.hass.log(
                 'Notifying of security status change: {0}'.format(new))
@@ -261,13 +265,13 @@ class SecuritySystem(App):
         """Initialize."""
         super().initialize()
 
-        self.listen_state(self._security_system_change_cb,
-                          self.ALARM_CONTROL_PANEL)
+        self.listen_state(
+            self._security_system_change_cb, self.ALARM_CONTROL_PANEL)
 
     # --- CALLBACKS -----------------------------------------------------------
-    def _security_system_change_cb(self, entity: Union[str, dict],
-                                   attribute: str, old: str, new: str,
-                                   kwargs: dict) -> None:
+    def _security_system_change_cb(
+            self, entity: Union[str, dict], attribute: str, old: str, new: str,
+            kwargs: dict) -> None:
         """Fire events when the security system status changes."""
         if new != 'unknown':
             self.fire_event('ALARM_CHANGE', state=new)

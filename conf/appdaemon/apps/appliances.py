@@ -65,8 +65,9 @@ class WasherDryerAutomation(Automation):
                 self.hass.manager_app.entities['status'],
                 constrain_input_boolean=self.constraint)
 
-        def power_changed(self, entity: Union[str, dict], attribute: str,
-                          old: str, new: str, kwargs: dict) -> None:
+        def power_changed(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Deal with changes to the power draw."""
             power = float(new)
             if (self.hass.manager_app.state !=
@@ -91,8 +92,9 @@ class WasherDryerAutomation(Automation):
                 self.hass.manager_app.state = (
                     self.hass.manager_app.States.clean)
 
-        def status_changed(self, entity: Union[str, dict], attribute: str,
-                           old: str, new: str, kwargs: dict) -> None:
+        def status_changed(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Deal with changes to the status."""
             if new == self.hass.manager_app.States.clean.value:
                 self.hass.notification_manager.repeat(
@@ -108,8 +110,8 @@ class WasherDryerAutomation(Automation):
             elif new == self.hass.manager_app.States.dirty.value:
                 self.hass.handler_registry.deregister(HANDLER_DISHWASHER_CLEAN)
 
-        def response_from_push_notification(self, event_name: str, data: dict,
-                                            kwargs: dict) -> None:
+        def response_from_push_notification(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Respond to iOS notification to empty the appliance."""
             self.hass.log('Responding to iOS request that dishwasher is empty')
 
@@ -198,8 +200,9 @@ class VacuumAutomation(Automation):
                     attribute=consumable,
                     constrain_input_boolean=self.constraint)
 
-        def consumable_changed(self, entity: Union[str, dict], attribute: str,
-                               old: str, new: str, kwargs: dict) -> None:
+        def consumable_changed(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Create a task when a consumable is getting low."""
             if int(new) < self.properties['consumable_threshold']:
                 self.hass.log('Consumable is low: {0}'.format(attribute))
@@ -276,8 +279,8 @@ class VacuumAutomation(Automation):
                     toggle,
                     constrain_input_boolean=self.constraint)
 
-        def alarm_changed(self, event_name: str, data: dict,
-                          kwargs: dict) -> None:
+        def alarm_changed(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Respond to 'ALARM_CHANGE' events."""
             state = self.hass.manager_app.States(
                 self.hass.get_state(self.hass.manager_app.entities['status']))
@@ -313,8 +316,9 @@ class VacuumAutomation(Automation):
                     'vacuum/start_pause',
                     entity_id=self.hass.manager_app.entities['vacuum'])
 
-        def all_done(self, entity: Union[str, dict], attribute: str, old: str,
-                     new: str, kwargs: dict) -> None:
+        def all_done(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Re-arm security (if needed) when done."""
             self.hass.log('Vacuuming cycle all done')
 
@@ -330,8 +334,9 @@ class VacuumAutomation(Automation):
                 self.hass.manager_app.BinStates.full)
             self.initiated_by_app = False
 
-        def bin_state_changed(self, entity: Union[str, dict], attribute: str,
-                              old: str, new: str, kwargs: dict) -> None:
+        def bin_state_changed(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Listen for changes in bin status."""
             if new == self.hass.manager_app.BinStates.full.value:
                 self.hass.notification_manager.repeat(
@@ -358,13 +363,15 @@ class VacuumAutomation(Automation):
                     self.hass.parse_time(self.properties['schedule_time']),
                     constrain_input_boolean=self.constraint))
 
-        def error_cleared(self, entity: Union[str, dict], attribute: str,
-                          old: str, new: str, kwargs: dict) -> None:
+        def error_cleared(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Clear the error when Wolfie is no longer stuck."""
             self.hass.handler_registry.deregister(HANDLER_VACUUM_STUCK)
 
-        def errored(self, entity: Union[str, dict], attribute: str, old: str,
-                    new: str, kwargs: dict) -> None:
+        def errored(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Brief when Wolfie's had an error."""
             self.hass.notification_manager.repeat(
                 'Wolfie Stuck 😢',
@@ -374,8 +381,8 @@ class VacuumAutomation(Automation):
                 target='home',
             )
 
-        def response_from_push_notification(self, event_name: str, data: dict,
-                                            kwargs: dict) -> None:
+        def response_from_push_notification(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Respond to iOS notification to empty vacuum."""
             self.hass.log('Responding to iOS request that vacuum is empty')
 
@@ -389,8 +396,9 @@ class VacuumAutomation(Automation):
                 '{0} emptied the vacuum.'.format(target),
                 target='not {0}'.format(target))
 
-        def schedule_changed(self, entity: Union[str, dict], attribute: str,
-                             old: str, new: str, kwargs: dict) -> None:
+        def schedule_changed(
+                self, entity: Union[str, dict], attribute: str, old: str,
+                new: str, kwargs: dict) -> None:
             """Reload the schedule when one of the input booleans change."""
             self.create_schedule()
 
@@ -400,8 +408,8 @@ class VacuumAutomation(Automation):
                 self.hass.manager_app.start()
                 self.initiated_by_app = True
 
-        def start_by_switch(self, event_name: str, data: dict,
-                            kwargs: dict) -> None:
+        def start_by_switch(
+                self, event_name: str, data: dict, kwargs: dict) -> None:
             """Start cleaning via the switch."""
             if not self.initiated_by_app:
                 self.hass.manager_app.start()

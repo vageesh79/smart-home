@@ -138,7 +138,7 @@ class TTS(App):
             self._speak_cb,
             3.25,
             master_sonos_player=master_sonos_player,
-            text='Good {0}. {1}'.format(self.utilities.relative_time_of_day(),
-                                        final_string))
+            text='Good {0}. {1}'.format(
+                self.utilities.relative_time_of_day(), final_string))
 
         self._last_spoken_text = text
