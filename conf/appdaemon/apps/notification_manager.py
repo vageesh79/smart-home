@@ -100,29 +100,38 @@ class NotificationManager(App):
 
     def _get_targets(self, target: str) -> list:
         """Get a list of targets based on input string."""
+        # 1. target='not Person'
         split = target.split(' ')
         if split[0] == 'not' and split[1] in const.PEOPLE:
-            targets = reduce((lambda x, y: x + y), [
+            return reduce((lambda x, y: x + y), [
                 v['notifiers'] for k, v in const.PEOPLE.items()
                 if k != split[1]
             ])
-        elif split[0] in const.PEOPLE:
-            targets = const.PEOPLE[target]['notifiers']
-        else:
-            try:
-                targets = []
-                for person in getattr(self.presence_manager,
-                                      'whos_{0}'.format(target))():
-                    targets += const.PEOPLE[person]['notifiers']
-            except AttributeError:
-                targets = reduce(
-                    (lambda x, y: x + y),
-                    [v['notifiers'] for _, v in const.PEOPLE.items()])
-                if target not in targets:
-                    self.error('Unknown notifier target: {0}'.format(target))
-                    return []
 
-        return targets
+        # 2. target='Person'
+        if split[0] in const.PEOPLE:
+            return const.PEOPLE[target]['notifiers']
+
+        try:
+            # 3. target='whos_home'
+            return [
+                const.PEOPLE[person]['notifiers'] for person in getattr(
+                    self.presence_manager, 'whos_{0}'.format(target))()
+            ]
+        except AttributeError:
+            targets = reduce((lambda x, y: x + y),
+                             [v['notifiers'] for v in const.PEOPLE.values()])
+
+            # 4. target='everyone'
+            if target == 'everyone':
+                return targets
+
+            # 5. target='person_iphone'
+            if target in targets:
+                return [target]
+
+            self.error('Unknown notifier target: {0}'.format(target))
+            return []
 
     def _in_blackout(self, notification: Notification) -> bool:
         """Determine whether a notification is set to send in blackout."""
