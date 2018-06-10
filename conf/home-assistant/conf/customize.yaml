@@ -42,8 +42,6 @@ lock.front_door_locked:
 media_player.roku_yp005n794105:
   friendly_name: "Living Room Roku"
   hidden: true
-plant.fiddle_leaf_fig:
-  friendly_name: "Overall Status"
 scene.depart_home:
   icon: "mdi:garage"
 scene.drive_home:
@@ -65,10 +63,10 @@ sensor.appdaemon_installed:
   icon: "mdi:language-python"
 sensor.average_indoor_humidity:
   friendly_name: "Avg. Humidity"
-  icon: "mdi:water-percent"
+  device_class: humidity
 sensor.average_indoor_temperature:
   friendly_name: "Avg. Temperature"
-  icon: "mdi:thermometer"
+  device_class: temperature
 sensor.britt_geocode:
   entity_picture: "/local/britt-home.png"
   friendly_name: "Britt"
@@ -84,7 +82,6 @@ sensor.fiddle_leaf_fig_fertility:
   icon: "mdi:test-tube"
 sensor.fiddle_leaf_fig_brightness:
   friendly_name: "Brightness"
-  icon: "mdi:brightness-7"
 sensor.garage_camera_bitrate:
   friendly_name: "Bitrate"
 sensor.garage_camera_detected_brightness:

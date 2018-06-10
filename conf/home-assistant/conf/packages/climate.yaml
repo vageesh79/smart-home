@@ -90,16 +90,16 @@ sensor:
       - sensor.thermostat_thermostat_humidity
   - platform: mqtt
     name: "Climate 1 Temperature"
-    icon: "mdi:thermometer"
     state_topic: "tele/climatesensor1/SENSOR"
     value_template: "{{ value_json['BME280'].Temperature }}"
     unit_of_measurement: "°F"
+    device_class: temperature
   - platform: mqtt
     name: "Climate 1 Humidity"
-    icon: "mdi:water-percent"
     state_topic: "tele/climatesensor1/SENSOR"
     value_template: "{{ value_json['BME280'].Humidity }}"
     unit_of_measurement: "%"
+    device_class: humidity
   - platform: mqtt
     name: "Climate 1 Pressure"
     icon: "mdi:cloud"
@@ -108,16 +108,16 @@ sensor:
     unit_of_measurement: "hPa"
   - platform: mqtt
     name: "Climate 2 Temperature"
-    icon: "mdi:thermometer"
     state_topic: "tele/climatesensor2/SENSOR"
     value_template: "{{ value_json['BME280'].Temperature }}"
     unit_of_measurement: "°F"
+    device_class: temperature
   - platform: mqtt
     name: "Climate 2 Humidity"
-    icon: "mdi:water-percent"
     state_topic: "tele/climatesensor2/SENSOR"
     value_template: "{{ value_json['BME280'].Humidity }}"
     unit_of_measurement: "%"
+    device_class: humidity
   - platform: mqtt
     name: "Climate 2 Pressure"
     icon: "mdi:cloud"

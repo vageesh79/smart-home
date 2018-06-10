@@ -115,47 +115,13 @@ sensor:
         friendly_name: Front Door Lock
         value_template: "{{ states.zwave.front_door.attributes.battery_level }}"
         unit_of_measurement: "%"
-        icon_template: >
-          {%
-            set battery_level =
-              states.zwave.front_door.attributes.battery_level|int
-          %}
-          {% if battery_level >= 90 %}
-            mdi:battery
-          {% elif battery_level >= 70 and battery_level < 90 %}
-            mdi:battery-70
-          {% elif battery_level >= 50 and battery_level < 70 %}
-            mdi:battery-50
-          {% elif battery_level >= 30 and battery_level < 50 %}
-            mdi:battery-30
-          {% elif battery_level >= 10 and battery_level < 30 %}
-            mdi:battery-10
-          {% else %}
-            mdi:battery-outline
-          {% endif %}
+        device_class: battery
       garage_fire_door_lock_battery:
         friendly_name: Garage Fire Door Lock
         value_template: >
           {{ states.zwave.garage_door.attributes.battery_level }}
         unit_of_measurement: '%'
-        icon_template: >
-          {%
-            set battery_level =
-              states.zwave.garage_door.attributes.battery_level
-          %}
-          {% if battery_level >= 90 %}
-            mdi:battery
-          {% elif battery_level >= 70 and battery_level < 90 %}
-            mdi:battery-70
-          {% elif battery_level >= 50 and battery_level < 70 %}
-            mdi:battery-50
-          {% elif battery_level >= 30 and battery_level < 50 %}
-            mdi:battery-30
-          {% elif battery_level >= 10 and battery_level < 30 %}
-            mdi:battery-10
-          {% else %}
-            mdi:battery-outline
-          {% endif %}
+        device_class: battery
       secure_status:
         friendly_name: Security Status
         value_template: >
