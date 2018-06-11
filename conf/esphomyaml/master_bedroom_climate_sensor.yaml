@@ -1,0 +1,18 @@
+esphomeyaml:
+  name: master_bathroom_climate_sensor
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: 'Phil?_IoT'
+  password: 'Iatvpok0##07'
+
+mqtt:
+  broker: 'hufflepuff.phil.lan'
+  username: 'sonoff'
+  password: 'E#tNJa#cP8WXad2wYsOrqoIOW'
+
+# Enable logging
+logger:
+
+ota:

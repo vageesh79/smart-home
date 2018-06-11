@@ -5,13 +5,12 @@
 import uuid
 from datetime import datetime, timedelta
 from enum import Enum
-from functools import reduce
 from typing import Union
 
 import attr
 
-import lib.const as const
 from app import App
+from lib.const import BLACKOUT_END, BLACKOUT_START, PEOPLE
 
 
 @attr.s  # pylint: disable=too-few-public-methods
@@ -100,43 +99,42 @@ class NotificationManager(App):
 
     def _get_targets(self, target: str) -> list:
         """Get a list of targets based on input string."""
-        targets = []  # type: ignore
-
         # 1. target='not Person'
         split = target.split(' ')
-        if split[0] == 'not' and split[1] in const.PEOPLE:
-            targets = reduce((lambda x, y: x + y), [
-                v['notifiers'] for k, v in const.PEOPLE.items()
-                if k != split[1]
-            ])
+        if split[0] == 'not' and split[1] in PEOPLE:
+            return [
+                notifier for name, attrs in PEOPLE.items()
+                if name != split[1] for notifier in attrs['notifiers']
+            ]
 
         # 2. target='Person'
-        if split[0] in const.PEOPLE:
-            targets = const.PEOPLE[target]['notifiers']
+        if split[0] in PEOPLE:
+            return PEOPLE[target]['notifiers']
 
         try:
-            # 3. target='whos_home'
-            targets = reduce((lambda x, y: x + y), [
-                const.PEOPLE[person]['notifiers'] for person in getattr(
+            return [
+                notifier for name in getattr(
                     self.presence_manager, 'whos_{0}'.format(target))()
-            ])
+                for notifier in PEOPLE[name]['notifiers']
+            ]
+
         except AttributeError:
-            all_targets = reduce(
-                (lambda x, y: x + y),
-                [v['notifiers'] for v in const.PEOPLE.values()])
+            all_targets = [
+                notifier for attrs in PEOPLE.values()
+                for notifier in attrs['notifiers']
+            ]
 
             # 4. target='everyone'
             if target == 'everyone':
-                targets = all_targets
+                return all_targets
 
             # 5. target='person_iphone'
             if target in all_targets:
-                targets = [target]
+                return [target]
 
             self.error('Unknown notifier target: {0}'.format(target))
 
-        self.log(targets)
-        return targets
+        return []
 
     def _in_blackout(self, notification: Notification) -> bool:
         """Determine whether a notification is set to send in blackout."""
@@ -165,9 +163,9 @@ class NotificationManager(App):
             return
 
         _data = data.get('data', None)
-        blackout_end_time = data.get('blackout_end_time', const.BLACKOUT_END)
+        blackout_end_time = data.get('blackout_end_time', BLACKOUT_END)
         blackout_start_time = data.get(
-            'blackout_start_time', const.BLACKOUT_START)
+            'blackout_start_time', BLACKOUT_START)
         interval = data.get('interval', None)
         key = data.get('key', None)
         target = data.get('target', None)
@@ -242,7 +240,7 @@ class NotificationManager(App):
         """Return a person from a provided permanent device ID."""
         try:
             [target] = [
-                k for k, v in const.PEOPLE.items()
+                k for k, v in PEOPLE.items()
                 if v['push_device_id'] == push_id
             ]
         except ValueError:
@@ -259,8 +257,8 @@ class NotificationManager(App):
             key: Union[str, None] = None,
             target: Union[str, None] = None,
             data: Union[dict, None] = None,
-            blackout_start_time: str = const.BLACKOUT_START,
-            blackout_end_time: str = const.BLACKOUT_END) -> None:
+            blackout_start_time: str = BLACKOUT_START,
+            blackout_end_time: str = BLACKOUT_END) -> None:
         """Send a repeating notification to one or more targets."""
         self._dispatch(
             Notification(
@@ -283,8 +281,8 @@ class NotificationManager(App):
             key: Union[str, None] = None,
             target: Union[str, None] = None,
             data: Union[dict, None] = None,
-            blackout_start_time: str = const.BLACKOUT_START,
-            blackout_end_time: str = const.BLACKOUT_END) -> None:
+            blackout_start_time: str = BLACKOUT_START,
+            blackout_end_time: str = BLACKOUT_END) -> None:
         """Send a notification to one or more targets."""
         self._dispatch(
             Notification(
