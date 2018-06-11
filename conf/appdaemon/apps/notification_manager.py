@@ -112,6 +112,7 @@ class NotificationManager(App):
             return PEOPLE[target]['notifiers']
 
         try:
+            # 3. target='home'
             return [
                 notifier for name in getattr(
                     self.presence_manager, 'whos_{0}'.format(target))()
