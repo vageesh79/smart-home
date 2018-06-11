@@ -63,10 +63,10 @@ sensor.appdaemon_installed:
   icon: "mdi:language-python"
 sensor.average_indoor_humidity:
   friendly_name: "Avg. Humidity"
-  device_class: humidity
+  icon: "mdi:water-percent"
 sensor.average_indoor_temperature:
   friendly_name: "Avg. Temperature"
-  device_class: temperature
+  icon: "mdi:thermometer"
 sensor.britt_geocode:
   entity_picture: "/local/britt-home.png"
   friendly_name: "Britt"
