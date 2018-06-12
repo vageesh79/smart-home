@@ -115,8 +115,8 @@ sensor:
       curl -L
       -H "User-Agent: Home Assistant"
       -H "Content-Type: application/json"
-      https://api.github.com/repos/openipcamera/openipc-firmware/releases/latest
-    value_template: '{{ value_json.tag_name }}'
+      https://api.github.com/repos/openipcamera/openipc-firmware/tags
+    value_template: '{{ value_json[0].name }}'
     scan_interval: 300
   - platform: command_line
     name: Yi Hack Available
