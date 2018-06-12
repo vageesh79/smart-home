@@ -147,6 +147,38 @@ fireplace_automation:
         name: Disable fireplace when away
         icon: mdi:fire
         initial: true
+garage_camera_automation:
+  module: switches
+  class: SwitchAutomation
+  dependencies:
+    - handler_registry
+    - presence_manager
+    - utilities
+  features:
+    - name: toggle_at_time
+      entities:
+        switch: switch.garage_camera_infrared_led
+      properties:
+        schedule_time: sunset
+        seasonal_offset: true
+        state: "on"
+      constraint:
+        key: auto_night_mode
+        name: "Garage Cam: Auto Night Mode"
+        icon: mdi:weather-sunset
+        initial: true
+    - name: toggle_at_time
+      entities:
+        switch: switch.garage_camera_infrared_led
+      properties:
+        schedule_time: sunrise
+        seasonal_offset: true
+        state: "off"
+      constraint:
+        key: auto_night_mode
+        name: "Garage Cam: Auto Night Mode"
+        icon: mdi:weather-sunset
+        initial: true
 hass_automation:
   module: hass
   class: HomeAssistantAutomation

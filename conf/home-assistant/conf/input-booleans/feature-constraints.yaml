@@ -1,4 +1,3 @@
----
 aarons_keys_automation_left_somewhere:
   icon: mdi:key
   initial: true
@@ -27,6 +26,10 @@ fireplace_automation_presence_failsafe:
   icon: mdi:fire
   initial: true
   name: Disable fireplace when away
+garage_camera_automation_auto_night_mode:
+  icon: mdi:weather-sunset
+  initial: true
+  name: 'Garage Cam: Auto Night Mode'
 hass_automation_auto_themes:
   icon: mdi:theme-light-dark
   initial: true
@@ -43,6 +46,10 @@ hass_automation_detect_blackout:
   icon: mdi:theme-light-dark
   initial: true
   name: Detect in-blackout
+hass_automation_new_tasmota_version_notification:
+  icon: mdi:home-assistant
+  initial: true
+  name: Notify of new versions
 hass_automation_new_version_notification:
   icon: mdi:home-assistant
   initial: true
@@ -167,3 +174,4 @@ wolfie_automation_scheduled_cycle:
   icon: mdi:google-circles-group
   initial: true
   name: Automatic schedule
+
