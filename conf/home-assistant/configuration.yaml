@@ -31,5 +31,5 @@ ios: !include conf/platforms/ios.yaml
 mqtt: !include conf/platforms/mosquitto.yaml
 nest: !include conf/platforms/nest.yaml
 proximity: !include conf/platforms/proximity.yaml
-tts: !include_dir_list conf/tts/
+tts: !include conf/platforms/tts.yaml
 zwave: !include conf/platforms/zwave.yaml
