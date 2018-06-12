@@ -2,6 +2,7 @@
 view: true
 icon: mdi:home-automation
 entities:
+  - group.camera_automations
   - group.climate_automations
   - group.dishwasher_automations
   - group.fiddle_leaf_fig_automations

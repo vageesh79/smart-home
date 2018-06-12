@@ -4,21 +4,6 @@ alarm_control_panel:
     username: !secret simplisafe_username
     password: !secret simplisafe_password
 
-camera:
-  - platform: nest
-  - platform: yi
-    name: Kitchen Camera
-    host: kitchen-camera.phil.lan
-    username: !secret yi_username
-    password: !secret yi_password
-    ffmpeg_arguments: -s 800x450
-  - platform: yi
-    name: Guest Bedroom Camera
-    host: guest-bedroom-camera.phil.lan
-    username: !secret yi_username
-    password: !secret yi_password
-    ffmpeg_arguments: -s 800x450
-
 group:
   garage_fire_door:
     name: Fire Door
@@ -32,7 +17,6 @@ group:
       - input_boolean.security_automation_auto_nighttime_lockup
       - input_boolean.security_automation_garage_left_open
       - input_boolean.security_automation_notify_on_change
-      - input_boolean.garage_camera_automation_auto_night_mode
   security_overview:
     name: Security Overview
     control: hidden
