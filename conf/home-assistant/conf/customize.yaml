@@ -147,7 +147,7 @@ switch.garage_camera_auto_night_mode:
 switch.garage_camera_infrared_led:
   friendly_name: "IR LED"
 switch.garage_camera_infrared_led_filter:
-  friendly_name: "IR LED Filter"
+  friendly_name: "Filter"
 switch.garage_camera_motion_detection:
   friendly_name: "Motion Detection"
 switch.garage_camera_motion_tracking:

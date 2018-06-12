@@ -22,11 +22,9 @@ group:
       - sensor.garage_camera_link_quality
       - sensor.garage_camera_noise_level
       - sensor.garage_camera_signal_level
-      - switch.garage_camera_auto_night_mode
       - switch.garage_camera_infrared_led
       - switch.garage_camera_infrared_led_filter
       - switch.garage_camera_motion_detection
-      - switch.garage_camera_motion_tracking
       - switch.garage_camera_rtsp_h264
       - switch.garage_camera_rtsp_mjpeg
 
@@ -63,13 +61,6 @@ sensor:
 
 switch:
   - platform: mqtt
-    name: "Garage Camera Auto Night Mode"
-    icon: "mdi:weather-night"
-    state_topic: "home/garage-camera/night_mode/auto"
-    command_topic: "home/garage-camera/night_mode/auto/set"
-    payload_on: "ON"
-    payload_off: "OFF"
-  - platform: mqtt
     name: "Garage Camera Infrared LED"
     icon: "mdi:led-variant-on"
     state_topic: "home/garage-camera/leds/ir"
@@ -88,13 +79,6 @@ switch:
     icon: "mdi:walk"
     state_topic: "home/garage-camera/motion/detection"
     command_topic: "home/garage-camera/motion/detection/set"
-    payload_on: "ON"
-    payload_off: "OFF"
-  - platform: mqtt
-    name: "Garage Camera Motion Tracking"
-    icon: "mdi:walk"
-    state_topic: "home/garage-camera/motion/tracking"
-    command_topic: "home/garage-camera/motion/tracking/set"
     payload_on: "ON"
     payload_off: "OFF"
   - platform: mqtt
