@@ -1,3 +1,0 @@
-platform: nmap_tracker
-hosts: 192.168.1.1/24
-scan_options: " --privileged -sP "

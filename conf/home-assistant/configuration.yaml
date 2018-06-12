@@ -14,22 +14,20 @@ recorder: !include conf/recorder.yaml
 updater:
 zeroconf:
 
-# Built-in Components:
+# Components:
 cloud: !include_dir_merge_named conf/cloud/
-device_tracker: !include_dir_list conf/device_trackers/
+device_tracker: !include conf/platforms/device-trackers.yaml
 emulated_hue: !include conf/platforms/emulated-hue.yaml
-group: !include_dir_named conf/groups/
-input_boolean: !include_dir_merge_named conf/input-booleans/
-notify: !include_dir_list conf/notifiers/
-weblink: !include conf/weblinks.yaml
-zone: !include_dir_merge_list conf/zones/
-
-# Custom Components:
 ffmpeg: !include conf/platforms/ffmpeg.yaml
+group: !include_dir_named conf/groups/
 ifttt: !include conf/platforms/ifttt.yaml
+input_boolean: !include_dir_merge_named conf/input-booleans/
 ios: !include conf/platforms/ios.yaml
 mqtt: !include conf/platforms/mosquitto.yaml
 nest: !include conf/platforms/nest.yaml
+notify: !include_dir_list conf/platforms/notifiers.yaml
 proximity: !include conf/platforms/proximity.yaml
 tts: !include conf/platforms/tts.yaml
+weblink: !include conf/weblinks.yaml
+zone: !include conf/zones.yaml
 zwave: !include conf/platforms/zwave.yaml

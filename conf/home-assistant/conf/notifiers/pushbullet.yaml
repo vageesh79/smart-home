@@ -1,4 +1,0 @@
----
-platform: pushbullet
-name: amb_macbook
-api_key: !secret pushbullet_api_key
